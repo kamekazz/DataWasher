@@ -9,7 +9,11 @@
     <header class="fixed top-0 left-0 w-full bg-gray-100 shadow py-2">
         <nav class="flex space-x-4 px-4">
             <a class="text-blue-600" href="{{ url_for('main.greeting') }}">Greeting</a>
-            <a class="text-blue-600" href="{{ url_for('main.login') }}">Login</a>
+            {% if session.get('logged_in') %}
+                <a class="text-blue-600" href="{{ url_for('main.logout') }}">Logout</a>
+            {% else %}
+                <a class="text-blue-600" href="{{ url_for('main.login') }}">Login</a>
+            {% endif %}
             <a class="text-blue-600" href="{{ url_for('main.create_user') }}">Create User</a>
             <a class="text-blue-600" href="{{ url_for('main.home') }}">Home</a>
             <a class="text-blue-600" href="{{ url_for('main.dashboard') }}">Dashboard</a>
