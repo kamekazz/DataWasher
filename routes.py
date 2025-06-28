@@ -18,6 +18,17 @@ def home():
 def dashboard():
     return render_template('pages/dashboard.html', title='Dashboard')
 
+@bp.route('/1-hour-report', methods=['GET', 'POST'])
+def one_hour_report():
+    message = None
+    if request.method == 'POST':
+        uploaded_file = request.files.get('file')
+        if uploaded_file and uploaded_file.filename:
+            message = f"Uploaded {uploaded_file.filename}"
+    return render_template('pages/one_hour_report.html',
+                           title='1-Hour Report',
+                           message=message)
+
 @bp.route('/greet/<name>')
 def greet(name):
     return f"<p>Hello, {name}!</p>"
