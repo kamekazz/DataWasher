@@ -9,5 +9,47 @@
         <input id="file" name="file" type="file" class="border p-2 rounded w-full" />
         <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Upload</button>
     </form>
+
+    {% if table_data %}
+    <h2 class="text-xl font-bold mt-4">Customers by City</h2>
+    <table class="min-w-full border-collapse my-4">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="border px-4 py-2 text-left">City</th>
+                <th class="border px-4 py-2 text-left">Customers</th>
+                <th class="border px-4 py-2 text-left">Percent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table_data %}
+            <tr>
+                <td class="border px-4 py-2">{{ row.city }}</td>
+                <td class="border px-4 py-2">{{ row.customers }}</td>
+                <td class="border px-4 py-2">{{ '%.1f' % row.percent }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <canvas id="pieChart" class="mx-auto" height="300"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('pieChart');
+        const data = {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                data: {{ chart_values|safe }},
+                backgroundColor: [
+                    '#4F46E5', '#9333EA', '#059669', '#F59E0B', '#EF4444', '#3B82F6'
+                ],
+            }]
+        };
+        new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: { responsive: true }
+        });
+    </script>
+    {% endif %}
 </div>
 {% include 'elements/footer.html' %}

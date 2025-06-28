@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, request
+import pandas as pd
+import json
 
 bp = Blueprint('main', __name__)
 
@@ -21,13 +23,41 @@ def dashboard():
 @bp.route('/1-hour-report', methods=['GET', 'POST'])
 def one_hour_report():
     message = None
+    table_data = None
+    chart_labels = None
+    chart_values = None
     if request.method == 'POST':
         uploaded_file = request.files.get('file')
         if uploaded_file and uploaded_file.filename:
-            message = f"Uploaded {uploaded_file.filename}"
+            try:
+                df = pd.read_csv(uploaded_file)
+                # try to find a city or country column
+                city_col = None
+                for col in df.columns:
+                    if col.lower() in ['city', 'country']:
+                        city_col = col
+                        break
+                if not city_col:
+                    message = 'No city column found'
+                else:
+                    counts = df[city_col].value_counts()
+                    total = counts.sum()
+                    table_data = [
+                        {'city': city, 'customers': int(count),
+                         'percent': count / total * 100}
+                        for city, count in counts.items()
+                    ]
+                    chart_labels = json.dumps(list(counts.index))
+                    chart_values = json.dumps(list(counts.values))
+                    message = f"Processed {uploaded_file.filename}"
+            except Exception as e:
+                message = f"Error processing file: {e}"
     return render_template('pages/one_hour_report.html',
                            title='1-Hour Report',
-                           message=message)
+                           message=message,
+                           table_data=table_data,
+                           chart_labels=chart_labels,
+                           chart_values=chart_values)
 
 @bp.route('/greet/<name>')
 def greet(name):
