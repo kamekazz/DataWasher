@@ -31,25 +31,11 @@
         </tbody>
     </table>
 
-    <canvas id="pieChart" class="mx-auto" height="300"></canvas>
+    <canvas id="pieChart" class="mx-auto" height="300"
+            data-labels="{{ chart_labels|safe }}"
+            data-values="{{ chart_values|safe }}"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx = document.getElementById('pieChart');
-        const data = {
-            labels: {{ chart_labels|safe }},
-            datasets: [{
-                data: {{ chart_values|safe }},
-                backgroundColor: [
-                    '#4F46E5', '#9333EA', '#059669', '#F59E0B', '#EF4444', '#3B82F6'
-                ],
-            }]
-        };
-        new Chart(ctx, {
-            type: 'pie',
-            data: data,
-            options: { responsive: true }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/one_hour_report.js') }}"></script>
     {% endif %}
 </div>
 {% include 'elements/footer.html' %}
