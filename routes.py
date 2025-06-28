@@ -4,15 +4,19 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def greeting():
-    return render_template('greeting.html')
+    return render_template('greeting.html', title='Greeting')
 
 @bp.route('/login')
 def login():
-    return render_template('login.html')
+    return render_template('login.html', title='Login')
 
 @bp.route('/home')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', title='Home')
+
+@bp.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html', title='Dashboard')
 
 @bp.route('/greet/<name>')
 def greet(name):

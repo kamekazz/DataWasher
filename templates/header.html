@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head>
+    <title>{{ title|default('DataWasher') }}</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('main.greeting') }}">Greeting</a>
+            <a href="{{ url_for('main.login') }}">Login</a>
+            <a href="{{ url_for('main.home') }}">Home</a>
+            <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+        </nav>
+    </header>
