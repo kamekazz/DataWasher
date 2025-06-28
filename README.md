@@ -2,8 +2,10 @@
 
 A simple Flask application skeleton.
 
-This project includes simple pages for creating a user and logging in. These
-forms demonstrate basic form handling but do not implement real authentication.
+The project now contains a very small authentication system.  Users can log in
+using the credentials `admin` / `secret`.  When logged in a session cookie is
+set and the **Dashboard** and **1‑Hour Report** pages become available.  Logging
+out clears the session and redirects back to the login page.
 
 ## Template structure
 
