@@ -7,9 +7,21 @@ bp = Blueprint('main', __name__)
 def greeting():
     return render_template('pages/greeting.html', title='Greeting')
 
-@bp.route('/login')
+@bp.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('pages/login.html', title='Login')
+    message = None
+    if request.method == 'POST':
+        username = request.form.get('username')
+        message = f"Logged in as {username}"
+    return render_template('pages/login.html', title='Login', message=message)
+
+@bp.route('/create-user', methods=['GET', 'POST'])
+def create_user():
+    message = None
+    if request.method == 'POST':
+        username = request.form.get('username')
+        message = f"Created user {username}"
+    return render_template('pages/create_user.html', title='Create User', message=message)
 
 @bp.route('/home')
 def home():
