@@ -10,61 +10,9 @@
         <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Upload</button>
     </form>
 
-    {% if ready_to_assign is not none %}
-    <h2 class="text-xl font-bold mt-4">Status Counts</h2>
-    <ul class="list-disc pl-5">
-        <li>Ready to Assign: {{ ready_to_assign }}</li>
-        <li>Assign: {{ assign_count }}</li>
-    </ul>
+    {% if assign_count is not none %}
+    <h2 class="text-xl font-bold mt-4">Assigned Tasks</h2>
+    <p>{{ assign_count }}</p>
     {% endif %}
-
-    {% if transaction_table %}
-    <h2 class="text-xl font-bold mt-4">Transactions</h2>
-    <table class="min-w-full border-collapse my-4">
-        <thead class="bg-gray-200">
-            <tr>
-                <th class="border px-4 py-2 text-left">Transaction</th>
-                <th class="border px-4 py-2 text-left">Count</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in transaction_table %}
-            <tr>
-                <td class="border px-4 py-2">{{ row.transaction }}</td>
-                <td class="border px-4 py-2">{{ row.count }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <canvas id="pieChart" class="mx-auto" height="300"
-            data-labels="{{ chart_labels|safe }}"
-            data-values="{{ chart_values|safe }}"></canvas>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/one_hour_report.js') }}"></script>
-    {% endif %}
-
-    {% if task_detail_summary %}
-    <h2 class="text-xl font-bold mt-4">Task Details by Transfer</h2>
-    <table class="min-w-full border-collapse my-4">
-        <thead class="bg-gray-200">
-            <tr>
-                <th class="border px-4 py-2 text-left">Transfer</th>
-                <th class="border px-4 py-2 text-left">Sum of Task Details</th>
-                <th class="border px-4 py-2 text-left">% of Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in task_detail_summary %}
-            <tr>
-                <td class="border px-4 py-2">{{ row.transfer }}</td>
-                <td class="border px-4 py-2">{{ row.task_details_sum }}</td>
-                <td class="border px-4 py-2">{{ row.percentage }}%</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
-
-
 </div>
 {% include 'elements/footer.html' %}
