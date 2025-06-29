@@ -1,11 +1,13 @@
 from flask import Flask
 from models import db, login_manager
 from routes import bp
+from dotenv import load_dotenv
+import os
 
 
 def create_app():
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "change-me"
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///datawasher.db"
 
     db.init_app(app)
@@ -21,4 +23,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=os.getenv("DEBUG"), host=os.getenv('HOST'), port=os.getenv('PORT', 5000))
