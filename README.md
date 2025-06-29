@@ -16,3 +16,39 @@ templates/
     pages/      # individual page templates
     elements/   # reusable elements such as header and footer
 ```
+
+## Environment variables
+
+The application relies on a few environment variables:
+
+- `SECRET_KEY` &mdash; secret key used by Flask for session management.
+- `DEBUG` &mdash; set to `1` to enable debug mode when running locally.
+- `HOST` &mdash; hostname to bind the development server to.
+- `PORT` &mdash; port number for the server (defaults to `5000`).
+
+For local development, create a `.env` file in the project root and define
+these variables. Load them into your shell before starting the app so `app.py`
+can read them via `os.getenv`.
+
+## Running the app locally
+
+Install the dependencies and start the server:
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
+The server will launch using the environment variables described above.
+
+## Deploying to Heroku
+
+The repository contains a `Procfile` configured for Heroku:
+
+```Procfile
+web: gunicorn app:app
+```
+
+Create a Heroku application, set the required environment variables (such as
+`SECRET_KEY`) and push the code. Heroku will run the command from the Procfile
+to serve the application.
