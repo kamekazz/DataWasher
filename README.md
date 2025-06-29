@@ -55,3 +55,10 @@ web: gunicorn app:app
 Create a Heroku application, set the required environment variables (such as
 `SECRET_KEY`) and push the code. Heroku will run the command from the Procfile
 to serve the application.
+
+## Database schema
+
+The `User` model stores password hashes using Werkzeug's
+`generate_password_hash` which can produce strings longer than 128
+characters. The `password_hash` column therefore uses `String(255)` to
+avoid truncation errors when inserting new users.
