@@ -4,6 +4,9 @@ from routes import bp
 from dotenv import load_dotenv
 import os
 
+# Load environment variables from a .env file before the application is created
+load_dotenv()
+
 
 def create_app():
     app = Flask(__name__)
