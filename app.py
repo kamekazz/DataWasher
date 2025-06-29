@@ -11,7 +11,10 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///datawasher.db"
+    database_uri = os.getenv("DATABASE_URL", "sqlite:///datawasher.db")
+    if database_uri.startswith("postgres://"):
+        database_uri = database_uri.replace("postgres://", "postgresql://", 1)
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
 
     db.init_app(app)
     login_manager.init_app(app)
