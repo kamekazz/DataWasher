@@ -2,10 +2,10 @@
 
 A simple Flask application skeleton.
 
-The project now contains a very small authentication system.  Users can log in
-using the credentials `admin` / `secret`.  When logged in a session cookie is
-set and the **Dashboard** and **1‑Hour Report** pages become available.  Logging
-out clears the session and redirects back to the login page.
+Authentication is backed by a small SQLite database.  Users can be created from
+the **Create User** page and then sign in using the login form.  Once
+authenticated the **Dashboard** and **1‑Hour Report** pages become available.
+Logging out clears the session and redirects back to the login page.
 
 ## Template structure
 
