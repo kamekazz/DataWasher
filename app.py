@@ -11,7 +11,9 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-    database_uri = os.getenv("DATABASE_URL", "sqlite:///datawasher.db")
+    database_uri = os.getenv("DATABASE_URL")
+    if not database_uri:
+        raise RuntimeError("DATABASE_URL must be set to a Heroku Postgres URI")
     if database_uri.startswith("postgres://"):
         database_uri = database_uri.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = database_uri

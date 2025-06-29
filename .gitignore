@@ -45,8 +45,6 @@ htmlcov/
 .pytest_cache/
 
 # Heroku-related (optional - if you're not committing compiled builds)
-*.sqlite3
-*.db
 
 # Node-related (only if you're adding JS front-end)
 node_modules/

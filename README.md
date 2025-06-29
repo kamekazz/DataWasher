@@ -2,7 +2,7 @@
 
 A simple Flask application skeleton.
 
-Authentication is backed by a small SQLite database.  Users can be created from
+Authentication is backed by a Heroku Postgres database.  Users can be created from
 the **Create User** page and then sign in using the login form.  Once
 authenticated the **Dashboard** and **1‑Hour Report** pages become available.
 Logging out clears the session and redirects back to the login page.
@@ -25,9 +25,9 @@ The application relies on a few environment variables:
 - `DEBUG` &mdash; set to `1` to enable debug mode when running locally.
 - `HOST` &mdash; hostname to bind the development server to.
 - `PORT` &mdash; port number for the server (defaults to `5000`).
-- `DATABASE_URL` &mdash; optional SQLAlchemy database URI. If absent, a local
-  SQLite database is used. Heroku populates this when a Postgres addon is
-  attached.
+- `DATABASE_URL` &mdash; SQLAlchemy database URI for the Heroku PostgreSQL
+  database. This variable is required and Heroku populates it automatically
+  when a Postgres addon is attached.
 
 For local development, create a `.env` file in the project root and define
 these variables. Load them into your shell before starting the app so `app.py`
