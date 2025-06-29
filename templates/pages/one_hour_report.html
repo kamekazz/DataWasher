@@ -10,32 +10,41 @@
         <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Upload</button>
     </form>
 
-    {% if table_data %}
-    <h2 class="text-xl font-bold mt-4">Customers by City</h2>
+    {% if ready_to_assign is not none %}
+    <h2 class="text-xl font-bold mt-4">Status Counts</h2>
+    <ul class="list-disc pl-5">
+        <li>Ready to Assign: {{ ready_to_assign }}</li>
+        <li>Assign: {{ assign_count }}</li>
+    </ul>
+    {% endif %}
+
+    {% if transaction_table %}
+    <h2 class="text-xl font-bold mt-4">Transactions</h2>
     <table class="min-w-full border-collapse my-4">
         <thead class="bg-gray-200">
             <tr>
-                <th class="border px-4 py-2 text-left">City</th>
-                <th class="border px-4 py-2 text-left">Customers</th>
-                <th class="border px-4 py-2 text-left">Percent</th>
+                <th class="border px-4 py-2 text-left">Transaction</th>
+                <th class="border px-4 py-2 text-left">Count</th>
             </tr>
         </thead>
         <tbody>
-            {% for row in table_data %}
+            {% for row in transaction_table %}
             <tr>
-                <td class="border px-4 py-2">{{ row.city }}</td>
-                <td class="border px-4 py-2">{{ row.customers }}</td>
-                <td class="border px-4 py-2">{{ '%.1f' % row.percent }}%</td>
+                <td class="border px-4 py-2">{{ row.transaction }}</td>
+                <td class="border px-4 py-2">{{ row.count }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
     <canvas id="pieChart" class="mx-auto" height="300"
             data-labels="{{ chart_labels|safe }}"
             data-values="{{ chart_values|safe }}"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/one_hour_report.js') }}"></script>
+    {% endif %}
+
+    {% if child_percentage is not none %}
+    <p class="mt-4">Children Percentage: {{ '%.1f' % child_percentage }}%</p>
     {% endif %}
 </div>
 {% include 'elements/footer.html' %}
