@@ -1,3 +1,4 @@
+import os
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required
 from logic.one_hour_report import process_one_hour_report_file
@@ -33,7 +34,7 @@ def logout():
 @bp.route('/create-user', methods=['GET', 'POST'])
 def create_user():
     message = None
-    if request.method == 'POST':
+    if request.method == 'POST' and os.getenv('DEBUG') == 'True':
         username = request.form.get('username')
         password = request.form.get('password')
         if not username or not password:
