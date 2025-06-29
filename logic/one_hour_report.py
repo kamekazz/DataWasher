@@ -27,8 +27,9 @@ def process_one_hour_report_file(uploaded_file):
             }
             for city, count in counts.items()
         ]
-        chart_labels = json.dumps(list(counts.index))
-        chart_values = json.dumps(list(counts.values))
+        # Convert numpy types to plain Python objects for JSON encoding
+        chart_labels = json.dumps(counts.index.tolist())
+        chart_values = json.dumps([int(v) for v in counts.values])
         message = f"Processed {uploaded_file.filename}"
         return message, table_data, chart_labels, chart_values
     except Exception as exc:
