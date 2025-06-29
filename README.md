@@ -25,20 +25,22 @@ The application relies on a few environment variables:
 - `DEBUG` &mdash; set to `1` to enable debug mode when running locally.
 - `HOST` &mdash; hostname to bind the development server to.
 - `PORT` &mdash; port number for the server (defaults to `5000`).
-- `DATABASE_URL` &mdash; SQLAlchemy database URI for the Heroku PostgreSQL
-  database. This variable is required and Heroku populates it automatically
+- `DATABASE_URL` &mdash; SQLAlchemy database URI. If unset, the application
+  falls back to `sqlite:///data.db`. Heroku sets this variable automatically
   when a Postgres addon is attached.
 
 For local development, create a `.env` file in the project root and define
-these variables. Load them into your shell before starting the app so `app.py`
-can read them via `os.getenv`.
+these variables. The app uses **python-dotenv** to load them automatically
+when `app.py` is executed.
 
 ## Running the app locally
 
-Install the dependencies and start the server:
+Install the dependencies. To use SQLite instead of Postgres, set the database
+URL and then start the server:
 
 ```bash
 pip install -r requirements.txt
+export DATABASE_URL=sqlite:///data.db  # optional
 python app.py
 ```
 

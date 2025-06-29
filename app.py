@@ -13,7 +13,8 @@ def create_app():
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     database_uri = os.getenv("DATABASE_URL")
     if not database_uri:
-        raise RuntimeError("DATABASE_URL must be set to a Heroku Postgres URI")
+        # Fall back to a local SQLite database when running outside Heroku
+        database_uri = "sqlite:///data.db"
     if database_uri.startswith("postgres://"):
         database_uri = database_uri.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
