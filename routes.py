@@ -1,7 +1,7 @@
 import os
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required
-from logic.one_hour_report import process_one_hour_report_file
+from logic.one_hour_report import count_assigned_tasks
 from models import db, User
 
 bp = Blueprint("main", __name__)
@@ -70,33 +70,15 @@ def dashboard():
 @login_required
 def one_hour_report():
     message = None
-    ready_to_assign = None
     assign_count = None
-    transaction_table = None
-    chart_labels = None
-    chart_values = None
-    task_detail_summary = None
     if request.method == "POST":
         uploaded_file = request.files.get("file")
-        (
-            message,
-            ready_to_assign,
-            assign_count,
-            transaction_table,
-            chart_labels,
-            chart_values,
-            task_detail_summary,
-        ) = process_one_hour_report_file(uploaded_file)
+        message, assign_count = count_assigned_tasks(uploaded_file)
     return render_template(
         "pages/one_hour_report.html",
         title="1-Hour Report",
         message=message,
-        ready_to_assign=ready_to_assign,
         assign_count=assign_count,
-        transaction_table=transaction_table,
-        chart_labels=chart_labels,
-        chart_values=chart_values,
-        task_detail_summary=task_detail_summary,
     )
 
 
