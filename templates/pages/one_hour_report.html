@@ -43,8 +43,6 @@
     <script src="{{ url_for('static', filename='js/one_hour_report.js') }}"></script>
     {% endif %}
 
-    {% if child_percentage is not none %}
-    <p class="mt-4">Children Percentage: {{ '%.1f' % child_percentage }}%</p>
-    {% endif %}
+
 </div>
 {% include 'elements/footer.html' %}

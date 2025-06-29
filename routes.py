@@ -67,7 +67,6 @@ def one_hour_report():
     transaction_table = None
     chart_labels = None
     chart_values = None
-    child_percentage = None
     if request.method == 'POST':
         uploaded_file = request.files.get('file')
         (message,
@@ -75,8 +74,7 @@ def one_hour_report():
          assign_count,
          transaction_table,
          chart_labels,
-         chart_values,
-         child_percentage) = process_one_hour_report_file(uploaded_file)
+         chart_values,) = process_one_hour_report_file(uploaded_file)
     return render_template(
         'pages/one_hour_report.html',
         title='1-Hour Report',
@@ -86,7 +84,6 @@ def one_hour_report():
         transaction_table=transaction_table,
         chart_labels=chart_labels,
         chart_values=chart_values,
-        child_percentage=child_percentage,
     )
 
 @bp.route('/greet/<name>')
