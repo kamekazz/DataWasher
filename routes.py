@@ -4,61 +4,69 @@ from flask_login import login_user, logout_user, login_required
 from logic.one_hour_report import process_one_hour_report_file
 from models import db, User
 
-bp = Blueprint('main', __name__)
+bp = Blueprint("main", __name__)
 
-@bp.route('/')
+
+@bp.route("/")
 def greeting():
-    return render_template('pages/greeting.html', title='Greeting')
+    return render_template("pages/greeting.html", title="Greeting")
 
-@bp.route('/login', methods=['GET', 'POST'])
+
+@bp.route("/login", methods=["GET", "POST"])
 def login():
     message = None
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
             login_user(user)
-            next_url = request.args.get('next') or url_for('main.dashboard')
+            next_url = request.args.get("next") or url_for("main.dashboard")
             return redirect(next_url)
-        message = 'Invalid credentials'
-    return render_template('pages/login.html', title='Login', message=message)
+        message = "Invalid credentials"
+    return render_template("pages/login.html", title="Login", message=message)
 
 
-@bp.route('/logout')
+@bp.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.login'))
+    return redirect(url_for("main.login"))
 
-@bp.route('/create-user', methods=['GET', 'POST'])
+
+@bp.route("/create-user", methods=["GET", "POST"])
 def create_user():
     message = None
-    if request.method == 'POST' and os.getenv('DEBUG') == 'True':
-        username = request.form.get('username')
-        password = request.form.get('password')
+    if request.method == "POST" and os.getenv("DEBUG") == "True":
+        username = request.form.get("username")
+        password = request.form.get("password")
         if not username or not password:
-            message = 'Username and password are required'
+            message = "Username and password are required"
         elif User.query.filter_by(username=username).first():
-            message = 'User already exists'
+            message = "User already exists"
         else:
             user = User(username=username)
             user.set_password(password)
             db.session.add(user)
             db.session.commit()
-            message = f'Created user {username}'
-    return render_template('pages/create_user.html', title='Create User', message=message)
+            message = f"Created user {username}"
+    return render_template(
+        "pages/create_user.html", title="Create User", message=message
+    )
 
-@bp.route('/home')
+
+@bp.route("/home")
 def home():
-    return render_template('pages/home.html', title='Home')
+    return render_template("pages/home.html", title="Home")
 
-@bp.route('/dashboard')
+
+@bp.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template('pages/dashboard.html', title='Dashboard')
+    return render_template("pages/dashboard.html", title="Dashboard")
 
-@bp.route('/1-hour-report', methods=['GET', 'POST'])
+
+@bp.route("/1-hour-report", methods=["GET", "POST"])
 @login_required
 def one_hour_report():
     message = None
@@ -67,31 +75,38 @@ def one_hour_report():
     transaction_table = None
     chart_labels = None
     chart_values = None
-    if request.method == 'POST':
-        uploaded_file = request.files.get('file')
-        (message,
-         ready_to_assign,
-         assign_count,
-         transaction_table,
-         chart_labels,
-         chart_values,) = process_one_hour_report_file(uploaded_file)
+    task_detail_summary = None
+    if request.method == "POST":
+        uploaded_file = request.files.get("file")
+        (
+            message,
+            ready_to_assign,
+            assign_count,
+            transaction_table,
+            chart_labels,
+            chart_values,
+            task_detail_summary,
+        ) = process_one_hour_report_file(uploaded_file)
     return render_template(
-        'pages/one_hour_report.html',
-        title='1-Hour Report',
+        "pages/one_hour_report.html",
+        title="1-Hour Report",
         message=message,
         ready_to_assign=ready_to_assign,
         assign_count=assign_count,
         transaction_table=transaction_table,
         chart_labels=chart_labels,
         chart_values=chart_values,
+        task_detail_summary=task_detail_summary,
     )
 
-@bp.route('/greet/<name>')
+
+@bp.route("/greet/<name>")
 def greet(name):
     return f"<p>Hello, {name}!</p>"
 
-@bp.route('/handle_url_params')
+
+@bp.route("/handle_url_params")
 def handle_url_params():
-    greeting = request.args.get('greeting', 'default_value1')
-    name = request.args.get('name', 'default_value2')
+    greeting = request.args.get("greeting", "default_value1")
+    name = request.args.get("name", "default_value2")
     return f"<h2>greeting: {greeting}, name: {name}</h2>"

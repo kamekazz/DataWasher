@@ -43,6 +43,28 @@
     <script src="{{ url_for('static', filename='js/one_hour_report.js') }}"></script>
     {% endif %}
 
+    {% if task_detail_summary %}
+    <h2 class="text-xl font-bold mt-4">Task Details by Transfer</h2>
+    <table class="min-w-full border-collapse my-4">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="border px-4 py-2 text-left">Transfer</th>
+                <th class="border px-4 py-2 text-left">Sum of Task Details</th>
+                <th class="border px-4 py-2 text-left">% of Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in task_detail_summary %}
+            <tr>
+                <td class="border px-4 py-2">{{ row.transfer }}</td>
+                <td class="border px-4 py-2">{{ row.task_details_sum }}</td>
+                <td class="border px-4 py-2">{{ row.percentage }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
 
 </div>
 {% include 'elements/footer.html' %}
