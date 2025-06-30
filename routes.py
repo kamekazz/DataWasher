@@ -73,6 +73,7 @@ def one_hour_report():
     assign_count = None
     ready_for_assignment = None
     transaction_summary = None
+    assigned_html = None
     if request.method == "POST":
         uploaded_file = request.files.get("file")
         (
@@ -80,7 +81,13 @@ def one_hour_report():
             assign_count,
             ready_for_assignment,
             transaction_summary,
+            assigned_df,
         ) = count_assigned_tasks(uploaded_file)
+
+        assigned_html = assigned_df.to_html(
+            classes="table-auto border-collapse mt-2",
+            index=False,
+        )
     return render_template(
         "pages/one_hour_report.html",
         title="1-Hour Report",
@@ -88,6 +95,7 @@ def one_hour_report():
         assign_count=assign_count,
         ready_for_assignment=ready_for_assignment,
         transaction_summary=transaction_summary,
+        assigned_table=assigned_html,
     )
 
 

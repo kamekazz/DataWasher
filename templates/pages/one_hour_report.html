@@ -41,5 +41,10 @@
         </tbody>
     </table>
     {% endif %}
+
+    {% if assigned_table %}
+    <h2 class="text-xl font-bold mt-4">Assigned Status Rows</h2>
+    {{ assigned_table | safe }}
+    {% endif %}
 </div>
 {% include 'elements/footer.html' %}

@@ -5,14 +5,16 @@ def count_assigned_tasks(uploaded_file):
     """Process a 1‑Hour Report CSV file.
 
     Returns a tuple ``(message, assigned_count, ready_for_assignment,
-    transaction_summary)`` where ``transaction_summary`` is a list of
-    dictionaries with ``transaction``, ``task_details`` and ``percentage``
-    keys.  The CSV file must include a ``Status`` column and, for the summary,
-    both ``Transaction`` and ``No. Of task details`` columns (case-insensitive).
+    transaction_summary, assigned_df)`` where ``transaction_summary`` is a list
+    of dictionaries with ``transaction``, ``task_details`` and ``percentage``
+    keys.  ``assigned_df`` is a pandas ``DataFrame`` containing only rows where
+    the ``Status`` column has the value ``Assigned``.  The CSV file must include
+    a ``Status`` column and, for the summary, both ``Transaction`` and ``No. Of
+    task details`` columns (case-insensitive).
     """
 
     if not uploaded_file or not uploaded_file.filename:
-        return None, None, None, None
+        return None, None, None, None, None
 
     try:
         df = pd.read_csv(uploaded_file)
@@ -21,10 +23,12 @@ def count_assigned_tasks(uploaded_file):
             None,
         )
         if status_col is None:
-            return "Required column 'Call Status' not found", None, None, None
+            return "Required column 'Call Status' not found", None, None, None, None
 
-        assigned_count = int((df[status_col].astype(str).str.lower() == "assigned").sum())
+        assigned_mask = df[status_col].astype(str).str.lower() == "assigned"
+        assigned_count = int(assigned_mask.sum())
         ready_for_assignment = int((df[status_col].astype(str).str.lower() == "ready for assignment").sum())
+        assigned_df = df[assigned_mask].copy()
 
         trans_col = next(
             (c for c in df.columns if c.lower().replace(" ", "") == "transaction"),
@@ -68,6 +72,12 @@ def count_assigned_tasks(uploaded_file):
             )
 
         message = f"Processed {uploaded_file.filename}"
-        return message, assigned_count, ready_for_assignment, transaction_summary
+        return (
+            message,
+            assigned_count,
+            ready_for_assignment,
+            transaction_summary,
+            assigned_df,
+        )
     except Exception as exc:
-        return f"Error processing file: {exc}", None, None, None
+        return f"Error processing file: {exc}", None, None, None, None
