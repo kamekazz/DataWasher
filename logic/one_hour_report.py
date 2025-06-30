@@ -6,9 +6,9 @@ def count_assigned_tasks(uploaded_file):
 
     Returns a tuple ``(message, assigned_count, ready_for_assignment,
     transaction_summary)`` where ``transaction_summary`` is a list of
-    dictionaries with ``transaction`` and ``task_details`` keys.  The
-    CSV file must include a ``Status`` column and, for the summary, both
-    ``Transaction`` and ``No. Of task details`` columns (case-insensitive).
+    dictionaries with ``transaction``, ``task_details`` and ``percentage``
+    keys.  The CSV file must include a ``Status`` column and, for the summary,
+    both ``Transaction`` and ``No. Of task details`` columns (case-insensitive).
     """
 
     if not uploaded_file or not uploaded_file.filename:
@@ -45,9 +45,27 @@ def count_assigned_tasks(uploaded_file):
                 df.groupby(trans_col)[task_details_col]
                 .sum()
                 .reset_index()
-                .rename(columns={trans_col: "transaction", task_details_col: "task_details"})
+                .rename(
+                    columns={
+                        trans_col: "transaction",
+                        task_details_col: "task_details",
+                    }
+                )
             )
+            summary_df["task_details"] = summary_df["task_details"].astype(int)
+            total_tasks = summary_df["task_details"].sum()
+            summary_df["percentage"] = (
+                summary_df["task_details"] / total_tasks * 100
+            ).round(2)
+
             transaction_summary = summary_df.to_dict(orient="records")
+            transaction_summary.append(
+                {
+                    "transaction": "Total",
+                    "task_details": int(total_tasks),
+                    "percentage": 100.0,
+                }
+            )
 
         message = f"Processed {uploaded_file.filename}"
         return message, assigned_count, ready_for_assignment, transaction_summary
