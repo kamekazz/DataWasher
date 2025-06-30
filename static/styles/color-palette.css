@@ -1,0 +1,10 @@
+:root {
+    --color-primary: #3B82F6; /* Blue - calm, reliable */
+    --color-secondary: #6366F1; /* Indigo - modern accent */
+    --color-success: #10B981; /* Green - successful upload */
+    --color-warning: #F59E0B; /* Yellow/Orange - warnings */
+    --color-error: #EF4444; /* Red - errors, failed rows */
+    --color-background: #F9FAFB; /* Light gray - neutral bg */
+    --color-text: #111827; /* Almost black - high contrast */
+    --color-muted-text: #6B7280; /* Gray for less emphasis */
+}
