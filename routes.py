@@ -2,6 +2,7 @@ import os
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required
 from logic.one_hour_report import count_assigned_tasks
+from logic.tracking_status import process_tracking_csv
 from models import db, User
 
 bp = Blueprint("main", __name__)
@@ -91,6 +92,23 @@ def one_hour_report():
         ready_for_assignment=ready_for_assignment,
         transaction_summary=transaction_summary,
         assigned_summary=assigned_transaction_summary,
+    )
+
+
+@bp.route("/track-shipments", methods=["GET", "POST"])
+@login_required
+def track_shipments():
+    message = None
+    statuses = None
+    if request.method == "POST":
+        uploaded_file = request.files.get("file")
+        message, statuses = process_tracking_csv(uploaded_file)
+    return render_template(
+        "pages/track_shipments.html",
+        title="Shipment Tracking",
+        message=message if statuses else None,
+        error=None if statuses else message,
+        statuses=statuses,
     )
 
 

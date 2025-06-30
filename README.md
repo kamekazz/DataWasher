@@ -25,3 +25,14 @@ templates/
 ## Styling
 
 The application includes a small custom CSS file under `static/styles/`. A color palette is defined in `static/styles/color-palette.css` using CSS variables. Import this file in your styles to access consistent colors across the UI. The templates already apply these variables via helper classes in `custom.css` to color links and tables.
+
+## Shipment Tracking
+
+Authenticated users can upload a CSV file containing FedEx tracking numbers on the **Track Shipments** page. The application reads each tracking number and retrieves the current status from the FedEx Track API, displaying the results in a table.
+
+### FedEx API configuration
+
+1. Sign up at the [FedEx Developer Portal](https://developer.fedex.com/) and create an application.
+2. Enable the *Track* service for the app and note the provided **Client ID** and **Client Secret**.
+3. Set environment variables `FEDEX_CLIENT_ID` and `FEDEX_CLIENT_SECRET` with these credentials before running the application.
+4. When a file is uploaded, the app obtains an OAuth token and calls `https://apis.fedex.com/track/v1/trackingnumbers` to fetch statuses.
