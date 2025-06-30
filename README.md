@@ -21,3 +21,7 @@ templates/
     pages/      # individual page templates
     elements/   # reusable elements such as header and footer
 ```
+
+## Styling
+
+The application includes a small custom CSS file under `static/styles/`. A color palette is defined in `static/styles/color-palette.css` using CSS variables. Import this file in your styles to access consistent colors across the UI.
