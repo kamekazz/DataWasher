@@ -20,6 +20,28 @@
     <p>{{ ready_for_assignment }}</p>
     {% endif %}
 
+    {% if assigned_summary %}
+    <h2 class="text-xl font-bold mt-4">Assigned Status Tasks Per Transaction</h2>
+    <table class="table-auto border-collapse mt-2">
+        <thead>
+            <tr>
+                <th class="border px-4 py-2">Transaction</th>
+                <th class="border px-4 py-2">No. Of task details</th>
+                <th class="border px-4 py-2">Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in assigned_summary %}
+            <tr>
+                <td class="border px-4 py-2">{{ row.transaction }}</td>
+                <td class="border px-4 py-2 text-right">{{ row.task_details }}</td>
+                <td class="border px-4 py-2 text-right">{{ row.percentage }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
     {% if transaction_summary %}
     <h2 class="text-xl font-bold mt-4">Tasks Per Transaction</h2>
     <table class="table-auto border-collapse mt-2">
@@ -42,26 +64,6 @@
     </table>
     {% endif %}
 
-    {% if assigned_summary %}
-    <h2 class="text-xl font-bold mt-4">Assigned Status Tasks Per Transaction</h2>
-    <table class="table-auto border-collapse mt-2">
-        <thead>
-            <tr>
-                <th class="border px-4 py-2">Transaction</th>
-                <th class="border px-4 py-2">No. Of task details</th>
-                <th class="border px-4 py-2">Percentage</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in assigned_summary %}
-            <tr>
-                <td class="border px-4 py-2">{{ row.transaction }}</td>
-                <td class="border px-4 py-2 text-right">{{ row.task_details }}</td>
-                <td class="border px-4 py-2 text-right">{{ row.percentage }}%</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
+
 </div>
 {% include 'elements/footer.html' %}
