@@ -24,4 +24,8 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=os.getenv("DEBUG"), host=os.getenv('HOST'), port=os.getenv('PORT', 5000))
+    app.run(
+        debug=os.getenv("DEBUG"),
+        host=os.getenv("HOST"),
+        port=os.getenv("PORT", 5000),
+    )
