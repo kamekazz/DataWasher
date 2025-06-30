@@ -1,0 +1,36 @@
+{% include 'elements/header.html' %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4">Shipment Tracking</h1>
+    {% if message %}
+    <p class="mb-4 text-success">{{ message }}</p>
+    {% endif %}
+    {% if error and not message %}
+    <p class="mb-4 text-red-600">{{ error }}</p>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data" class="mb-6">
+        <label for="file" class="block mb-2 font-medium">Upload CSV</label>
+        <input id="file" name="file" type="file" class="border p-2 rounded w-full" />
+        <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Upload</button>
+    </form>
+
+    {% if statuses %}
+    <h2 class="text-xl font-bold mt-4">Tracking Statuses</h2>
+    <table class="table-auto border-collapse mt-2 palette-table">
+        <thead>
+            <tr>
+                <th class="border px-4 py-2">Tracking Number</th>
+                <th class="border px-4 py-2">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in statuses %}
+            <tr>
+                <td class="border px-4 py-2">{{ row.tracking_number }}</td>
+                <td class="border px-4 py-2">{{ row.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% include 'elements/footer.html' %}
