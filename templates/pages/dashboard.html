@@ -2,14 +2,14 @@
 <div class="container mx-auto px-4">
     <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
     <p class="mb-4">
-        <a class="text-blue-600" href="{{ url_for('main.one_hour_report') }}">1-Hour Report</a>
+        <a href="{{ url_for('main.one_hour_report') }}">1-Hour Report</a>
     </p>
     <div class="mb-6">
         <label for="csv" class="block mb-2 font-medium">Upload CSV</label>
         <input id="csv" type="file" class="border p-2 rounded w-full">
     </div>
-    <table class="min-w-full border-collapse">
-        <thead class="bg-gray-200">
+    <table class="min-w-full border-collapse palette-table">
+        <thead>
             <tr>
                 <th class="border px-4 py-2 text-left">File Name</th>
                 <th class="border px-4 py-2 text-left">Rows</th>
@@ -20,12 +20,12 @@
             <tr>
                 <td class="border px-4 py-2">sales.csv</td>
                 <td class="border px-4 py-2">120</td>
-                <td class="border px-4 py-2 text-green-600">Processed</td>
+                <td class="border px-4 py-2 text-success">Processed</td>
             </tr>
             <tr>
                 <td class="border px-4 py-2">inventory.csv</td>
                 <td class="border px-4 py-2">85</td>
-                <td class="border px-4 py-2 text-yellow-600">Pending</td>
+                <td class="border px-4 py-2 text-warning">Pending</td>
             </tr>
         </tbody>
     </table>
