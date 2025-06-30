@@ -2,3 +2,41 @@
 body {
     font-family: sans-serif;
 }
+
+/* Basic link color using the palette */
+a {
+    color: var(--color-primary);
+}
+
+/* Header background derived from palette */
+header {
+    background-color: var(--color-background);
+}
+
+/* Utility text colors */
+.text-success {
+    color: var(--color-success);
+}
+
+.text-warning {
+    color: var(--color-warning);
+}
+
+.text-error {
+    color: var(--color-error);
+}
+
+/* Table styling using palette colors */
+.palette-table th {
+    background-color: var(--color-primary);
+    color: #ffffff;
+}
+
+.palette-table td {
+    border: 1px solid var(--color-muted-text);
+    padding: 0.5rem;
+}
+
+.palette-table tbody tr:nth-child(even) {
+    background-color: var(--color-background);
+}
