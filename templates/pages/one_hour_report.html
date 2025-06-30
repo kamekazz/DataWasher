@@ -19,5 +19,25 @@
     <h2 class="text-xl font-bold mt-4">Ready For Assignment</h2>
     <p>{{ ready_for_assignment }}</p>
     {% endif %}
+
+    {% if transaction_summary %}
+    <h2 class="text-xl font-bold mt-4">Tasks Per Transaction</h2>
+    <table class="table-auto border-collapse mt-2">
+        <thead>
+            <tr>
+                <th class="border px-4 py-2">Transaction</th>
+                <th class="border px-4 py-2">No. Of task details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in transaction_summary %}
+            <tr>
+                <td class="border px-4 py-2">{{ row.transaction }}</td>
+                <td class="border px-4 py-2 text-right">{{ row.task_details }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 </div>
 {% include 'elements/footer.html' %}
