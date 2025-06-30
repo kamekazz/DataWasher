@@ -71,14 +71,16 @@ def dashboard():
 def one_hour_report():
     message = None
     assign_count = None
+    ready_for_assignment = None
     if request.method == "POST":
         uploaded_file = request.files.get("file")
-        message, assign_count = count_assigned_tasks(uploaded_file)
+        message, assign_count,ready_for_assignment = count_assigned_tasks(uploaded_file)
     return render_template(
         "pages/one_hour_report.html",
         title="1-Hour Report",
         message=message,
         assign_count=assign_count,
+        ready_for_assignment=ready_for_assignment,
     )
 
 

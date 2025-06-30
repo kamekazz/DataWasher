@@ -14,5 +14,10 @@
     <h2 class="text-xl font-bold mt-4">Assigned Tasks</h2>
     <p>{{ assign_count }}</p>
     {% endif %}
+
+    {% if ready_for_assignment is not none %}
+    <h2 class="text-xl font-bold mt-4">Ready For Assignment</h2>
+    <p>{{ ready_for_assignment }}</p>
+    {% endif %}
 </div>
 {% include 'elements/footer.html' %}
