@@ -5,13 +5,14 @@ def count_assigned_tasks(uploaded_file):
     """Process a 1‑Hour Report CSV file.
 
     Returns a tuple ``(message, assigned_count, ready_for_assignment,
-    transaction_summary, assigned_transaction_summary)`` where both summary
-    values are lists of dictionaries with ``transaction``, ``task_details`` and
-    ``percentage`` keys. ``transaction_summary`` is calculated using **all**
-    rows in the CSV file while ``assigned_transaction_summary`` only includes
-    rows where the ``Status`` column is ``Assigned``. The CSV file must include
-    a ``Status`` column and, for the summaries, both ``Transaction`` and
-    ``No. Of task details`` columns (case-insensitive).
+    transaction_summary, assigned_transaction_summary)`` where
+    ``transaction_summary`` and ``assigned_transaction_summary`` are lists of
+    dictionaries. ``transaction_summary`` uses the ``No. Of task details``
+    column to sum tasks for **all** rows. ``assigned_transaction_summary``
+    instead counts the number of rows per transaction for those with
+    ``Status`` equal to ``Assigned``. The CSV file must include a ``Status``
+    column and, for the first summary, both ``Transaction`` and ``No. Of task
+    details`` columns (case-insensitive).
     """
 
     if not uploaded_file or not uploaded_file.filename:
@@ -90,22 +91,14 @@ def count_assigned_tasks(uploaded_file):
             )
 
             assigned_summary_df = (
-                assigned_df.groupby(trans_col)[task_details_col]
-                .sum()
-                .reset_index()
-                .rename(
-                    columns={
-                        trans_col: "transaction",
-                        task_details_col: "task_details",
-                    }
-                )
+                assigned_df.groupby(trans_col)
+                .size()
+                .reset_index(name="count")
+                .rename(columns={trans_col: "transaction"})
             )
-            assigned_summary_df["task_details"] = assigned_summary_df[
-                "task_details"
-            ].astype(int)
-            assigned_total = assigned_summary_df["task_details"].sum()
+            assigned_total = int(assigned_summary_df["count"].sum())
             assigned_summary_df["percentage"] = (
-                assigned_summary_df["task_details"] / assigned_total * 100
+                assigned_summary_df["count"] / assigned_total * 100
             ).round(2)
 
             assigned_transaction_summary = assigned_summary_df.to_dict(
@@ -114,7 +107,7 @@ def count_assigned_tasks(uploaded_file):
             assigned_transaction_summary.append(
                 {
                     "transaction": "Total",
-                    "task_details": int(assigned_total),
+                    "count": assigned_total,
                     "percentage": 100.0,
                 }
             )
