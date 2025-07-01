@@ -8,9 +8,10 @@ authenticated the **Dashboard** and **1‑Hour Report** pages become available.
 Logging out clears the session and redirects back to the login page.
 
 The **1‑Hour Report** page now displays two summary tables when a CSV file is
-uploaded.  The first table, **Tasks Per Transaction**, uses all rows in the
-file.  A second table, **Assigned Status Tasks Per Transaction**, summarises
-only those rows where the ``Status`` column value is ``Assigned``.
+uploaded.  The first table, **Tasks Per Transaction**, sums the ``No. Of task
+details`` column for all rows.  A second table, **Assigned Status Tasks Per
+Transaction**, summarises only those rows where the ``Status`` column value is
+``Assigned`` and shows the count of transactions per type.
 
 ## Template structure
 

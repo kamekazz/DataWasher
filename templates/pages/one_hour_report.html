@@ -26,7 +26,7 @@
         <thead>
             <tr>
                 <th class="border px-4 py-2">Transaction</th>
-                <th class="border px-4 py-2">No. Of task details</th>
+                <th class="border px-4 py-2">Count</th>
                 <th class="border px-4 py-2">Percentage</th>
             </tr>
         </thead>
@@ -34,7 +34,7 @@
             {% for row in assigned_summary %}
             <tr>
                 <td class="border px-4 py-2">{{ row.transaction }}</td>
-                <td class="border px-4 py-2 text-right">{{ row.task_details }}</td>
+                <td class="border px-4 py-2 text-right">{{ row.count }}</td>
                 <td class="border px-4 py-2 text-right">{{ row.percentage }}%</td>
             </tr>
             {% endfor %}
