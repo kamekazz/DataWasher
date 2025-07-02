@@ -78,3 +78,16 @@ def process_tracking_csv(uploaded_file):
         return str(exc), None
     except Exception as exc:
         return f"Error processing file: {exc}", None
+
+
+def process_single_tracking_number(tracking_number):
+    """Return status for a single tracking number."""
+    if not tracking_number:
+        return "Tracking number required", None
+    try:
+        statuses = fetch_tracking_statuses([tracking_number])
+        return "Success", statuses[0] if statuses else None
+    except FedExAPIError as exc:
+        return str(exc), None
+    except Exception as exc:
+        return f"Error fetching status: {exc}", None
