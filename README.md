@@ -29,12 +29,12 @@ The application includes a small custom CSS file under `static/styles/`. A color
 
 ## Shipment Tracking
 
-Authenticated users can upload a CSV file containing FedEx tracking numbers on the **Track Shipments** page. The application reads the "Tracking Number" column, fetches the status for each number from the FedEx Track API, and shows the same table with a new "Status" column.
+Authenticated users can either enter a single FedEx tracking number or upload a CSV file on the **Track Shipments** page. When uploading, the file must contain a column named "Tracking Number". The app reads every value in that column, fetches the status for each from the FedEx Track API, and displays a table with "Tracking Number" and "Status" columns.
 
 ### FedEx API configuration
 
 1. Sign up at the [FedEx Developer Portal](https://developer.fedex.com/) and create an application.
 2. Enable the *Track* service for the app and note the provided **Client ID** and **Client Secret**.
 3. Set environment variables `FEDEX_CLIENT_ID` and `FEDEX_CLIENT_SECRET` with these credentials before running the application.
-4. When a file is uploaded, the app obtains an OAuth token and calls `https://apis.fedex.com/track/v1/trackingnumbers` to fetch statuses.
+4. When a tracking number or file is submitted, the app obtains an OAuth token and calls `https://apis.fedex.com/track/v1/trackingnumbers` to fetch statuses.
 

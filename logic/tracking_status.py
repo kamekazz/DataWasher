@@ -70,7 +70,7 @@ def fetch_tracking_statuses(tracking_numbers):
 
 
 def process_tracking_csv(uploaded_file):
-    """Parse uploaded CSV and return message and table rows with statuses."""
+    """Parse uploaded CSV and return message and tracking statuses."""
     if not uploaded_file or not uploaded_file.filename:
         return "No file uploaded", None
     try:
@@ -84,10 +84,8 @@ def process_tracking_csv(uploaded_file):
 
         tracking_numbers = df[track_col].astype(str).tolist()
         statuses = fetch_tracking_statuses(tracking_numbers)
-        status_map = {item["tracking_number"]: item["status"] for item in statuses}
-        df["Status"] = df[track_col].astype(str).map(status_map).fillna("Unknown")
 
-        return f"Processed {uploaded_file.filename}", df.to_dict(orient="records")
+        return f"Processed {uploaded_file.filename}", statuses
     except FedExAPIError as exc:
         return str(exc), None
     except Exception as exc:
