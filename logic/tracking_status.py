@@ -38,24 +38,34 @@ def fetch_tracking_statuses(tracking_numbers):
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
     }
-    body = {
-        "trackingInfo": [
-            {"trackingNumberInfo": {"trackingNumber": num}}
-            for num in tracking_numbers
-        ]
-    }
-    resp = requests.post(FEDEX_TRACK_URL, json=body, headers=headers, timeout=10)
-    if resp.status_code != 200:
-        raise FedExAPIError(f"Track request failed: {resp.status_code} {resp.text}")
 
     statuses = []
-    data = resp.json()
-    results = data.get("output", {}).get("completeTrackResults", [])
-    for item in results:
-        track_data = item.get("trackResults", [{}])[0]
-        num = track_data.get("trackingNumber")
-        status = track_data.get("latestStatusDetail", {}).get("statusByLocale", "Unknown")
-        statuses.append({"tracking_number": num, "status": status})
+    for start in range(0, len(tracking_numbers), 30):
+        batch = tracking_numbers[start : start + 30]
+        body = {
+            "trackingInfo": [
+                {"trackingNumberInfo": {"trackingNumber": num}}
+                for num in batch
+            ]
+        }
+        resp = requests.post(
+            FEDEX_TRACK_URL, json=body, headers=headers, timeout=10
+        )
+        if resp.status_code != 200:
+            raise FedExAPIError(
+                f"Track request failed: {resp.status_code} {resp.text}"
+            )
+
+        data = resp.json()
+        results = data.get("output", {}).get("completeTrackResults", [])
+        for item in results:
+            track_data = item.get("trackResults", [{}])[0]
+            num = track_data.get("trackingNumber")
+            status = (
+                track_data.get("latestStatusDetail", {}).get("statusByLocale", "Unknown")
+            )
+            statuses.append({"tracking_number": num, "status": status})
+
     return statuses
 
 
