@@ -7,14 +7,15 @@
     {% if error and not message %}
     <p class="mb-4 text-red-600">{{ error }}</p>
     {% endif %}
-    <form method="post" class="mb-6">
-        <label for="tracking_number" class="block mb-2 font-medium">Enter Tracking Number</label>
-        <input id="tracking_number" name="tracking_number" type="text" class="border p-2 rounded w-full" />
-        <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Track</button>
+    <div id="loading" class="hidden mb-4">Processing...</div>
+    <form id="tracking-form" method="post" enctype="multipart/form-data" class="mb-6">
+        <label for="file" class="block mb-2 font-medium">Upload CSV</label>
+        <input id="file" name="file" type="file" class="border p-2 rounded w-full" />
+        <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Upload</button>
     </form>
 
-    {% if status %}
-    <h2 class="text-xl font-bold mt-4">Tracking Status</h2>
+    {% if rows %}
+    <h2 class="text-xl font-bold mt-4">Tracking Statuses</h2>
     <table class="table-auto border-collapse mt-2 palette-table">
         <thead>
             <tr>
@@ -23,12 +24,19 @@
             </tr>
         </thead>
         <tbody>
+            {% for row in rows %}
             <tr>
-                <td class="border px-4 py-2">{{ tracking_number }}</td>
-                <td class="border px-4 py-2">{{ status.status }}</td>
+                <td class="border px-4 py-2">{{ row['Tracking Number'] }}</td>
+                <td class="border px-4 py-2">{{ row['Status'] }}</td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
     {% endif %}
 </div>
+<script>
+document.getElementById('tracking-form').addEventListener('submit', function() {
+    document.getElementById('loading').classList.remove('hidden');
+});
+</script>
 {% include 'elements/footer.html' %}
