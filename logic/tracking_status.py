@@ -60,7 +60,7 @@ def fetch_tracking_statuses(tracking_numbers):
         results = data.get("output", {}).get("completeTrackResults", [])
         for item in results:
             track_data = item.get("trackResults", [{}])[0]
-            num = track_data.get("trackingNumber")
+            num = track_data['trackingNumberInfo']['trackingNumber']
             status = (
                 track_data.get("latestStatusDetail", {}).get("statusByLocale", "Unknown")
             )
