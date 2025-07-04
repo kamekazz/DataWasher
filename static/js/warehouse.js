@@ -1,7 +1,6 @@
 const container = document.getElementById('warehouse-container');
 const spinner = document.getElementById('warehouse-spinner');
 let scene, camera, renderer, forklift, controls, boxes = [];
-let darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 function createForklift(THREE) {
     const group = new THREE.Group();
@@ -26,14 +25,9 @@ function createForklift(THREE) {
     return group;
 }
 
-function handleTheme(THREE) {
-    if (darkMode) {
-        scene.background = new THREE.Color(0x111111);
-        scene.fog = new THREE.Fog(0x111111, 10, 50);
-    } else {
-        scene.background = new THREE.Color(0xbfd1e5);
-        scene.fog = new THREE.Fog(0xbfd1e5, 10, 50);
-    }
+function applyTheme(THREE) {
+    scene.background = new THREE.Color(0xbfd1e5);
+    scene.fog = new THREE.Fog(0xbfd1e5, 10, 50);
 }
 
 async function init() {
@@ -44,7 +38,7 @@ async function init() {
     ]);
 
     scene = new THREE.Scene();
-    handleTheme(THREE);
+    applyTheme(THREE);
     camera = new THREE.PerspectiveCamera(75, container.clientWidth/container.clientHeight, 0.1, 1000);
     camera.position.set(5,5,5);
 
@@ -54,7 +48,7 @@ async function init() {
 
     controls = new OrbitControls(camera, renderer.domElement);
 
-    const light = new THREE.HemisphereLight(0xffffff, darkMode?0x222222:0xffffff, 1);
+    const light = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
     scene.add(light);
     const dir = new THREE.DirectionalLight(0xffffff, 0.5);
     dir.position.set(3,10,5);
@@ -64,7 +58,7 @@ async function init() {
     const map = await res.json();
 
     const floorGeo = new THREE.PlaneGeometry(map.floor.width, map.floor.height);
-    const floorMat = new THREE.MeshStandardMaterial({color: darkMode?0x444444:0xdddddd});
+    const floorMat = new THREE.MeshStandardMaterial({color: 0xdddddd});
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI/2;
     scene.add(floor);
@@ -118,10 +112,6 @@ async function init() {
     animate();
     spinner.style.display = 'none';
 
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        darkMode = e.matches;
-        handleTheme(THREE);
-    });
 
     window.addEventListener('beforeunload', () => {
         renderer.dispose();
