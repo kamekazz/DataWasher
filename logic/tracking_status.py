@@ -37,7 +37,7 @@ def _get_oauth_token():
         "client_id": client_id,
         "client_secret": client_secret,
     }
-    resp = requests.post(FEDEX_OAUTH_URL, data=data, timeout=10)
+    resp = requests.post(FEDEX_OAUTH_URL, data=data, timeout=30)
     if resp.status_code != 200:
         raise FedExAPIError(f"OAuth request failed: {resp.status_code} {resp.text}")
     return resp.json().get("access_token")
@@ -64,7 +64,7 @@ def fetch_tracking_statuses(tracking_numbers):
             ]
         }
         resp = requests.post(
-            FEDEX_TRACK_URL, json=body, headers=headers, timeout=10
+            FEDEX_TRACK_URL, json=body, headers=headers, timeout=30
         )
         if resp.status_code != 200:
             raise FedExAPIError(
