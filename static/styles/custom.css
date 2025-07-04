@@ -45,13 +45,3 @@ header {
     transform: translate(-50%, -50%);
 }
 
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #111827;
-        color: #e5e7eb;
-    }
-    header {
-        background-color: #1f2937;
-    }
-}
