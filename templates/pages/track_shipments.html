@@ -13,11 +13,20 @@
         <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Track</button>
     </form>
 
-    <form method="post" enctype="multipart/form-data" class="mb-6">
+    <form method="post" enctype="multipart/form-data" class="mb-6" id="fileForm">
         <label for="file" class="block mb-2 font-medium">Upload CSV</label>
         <input id="file" name="file" type="file" class="border p-2 rounded w-full" />
         <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Upload</button>
     </form>
+
+    <div id="loading" class="hidden flex items-center space-x-2">
+        <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        </svg>
+        <span>Processing...</span>
+        <button id="cancelBtn" type="button" class="ml-4 px-2 py-1 border rounded hidden">Cancel</button>
+    </div>
 
     {% if status %}
     <h2 class="text-xl font-bold mt-4">Tracking Status</h2>
@@ -55,4 +64,5 @@
     </table>
     {% endif %}
 </div>
+<script src="{{ url_for('static', filename='js/track_shipments.js') }}"></script>
 {% include 'elements/footer.html' %}
