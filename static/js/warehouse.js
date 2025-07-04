@@ -39,7 +39,7 @@ function handleTheme(THREE) {
 async function init() {
     spinner.style.display = 'block';
     const [THREE, {OrbitControls}] = await Promise.all([
-        import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'),
+        import('three'),
         import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js')
     ]);
 
