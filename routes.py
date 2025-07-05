@@ -1,12 +1,12 @@
 import os
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required
 from logic.one_hour_report import count_assigned_tasks
 from logic.tracking_status import (
     process_tracking_csv,
     process_single_tracking_number,
 )
-from models import db, User, Driver
+from models import db, User, Driver, Labor
 
 bp = Blueprint("main", __name__)
 
@@ -154,6 +154,35 @@ def drivers():
         title="Drivers",
         message=message,
         drivers=all_drivers,
+    )
+
+
+@bp.route("/labor", methods=["GET", "POST"])
+@login_required
+def labor():
+    """Create a new labor record and list all existing records."""
+    if request.method == "POST":
+        labor_type = request.form.get("labor_type")
+        amount = request.form.get("amount")
+        if not labor_type or not amount:
+            flash("Labor type and amount are required", "error")
+        else:
+            try:
+                amount_int = int(amount)
+            except ValueError:
+                flash("Amount must be an integer", "error")
+            else:
+                new_labor = Labor(labor_type=labor_type, amount=amount_int)
+                db.session.add(new_labor)
+                db.session.commit()
+                flash(f"Added labor type {labor_type}", "success")
+        return redirect(url_for("main.labor"))
+
+    all_labor = Labor.query.all()
+    return render_template(
+        "pages/labor.html",
+        title="Labor",
+        labor_entries=all_labor,
     )
 
 
