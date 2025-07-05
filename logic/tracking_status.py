@@ -39,8 +39,12 @@ def _get_oauth_token():
     }
     resp = requests.post(FEDEX_OAUTH_URL, data=data, timeout=30)
     if resp.status_code != 200:
-        raise FedExAPIError(f"OAuth request failed: {resp.status_code} {resp.text}")
-    return resp.json().get("access_token")
+        raise FedExAPIError(
+            f"OAuth request failed: {resp.status_code} {resp.text}"
+        )
+
+    response_data = resp.json()
+    return response_data.get("access_token")
 
 
 def fetch_tracking_statuses(tracking_numbers):
@@ -57,12 +61,13 @@ def fetch_tracking_statuses(tracking_numbers):
     statuses = []
     for start in range(0, len(tracking_numbers), 30):
         batch = tracking_numbers[start : start + 30]
-        body = {
-            "trackingInfo": [
-                {"trackingNumberInfo": {"trackingNumber": num}}
-                for num in batch
-            ]
-        }
+
+        tracking_info = []
+        for num in batch:
+            info = {"trackingNumberInfo": {"trackingNumber": num}}
+            tracking_info.append(info)
+
+        body = {"trackingInfo": tracking_info}
         resp = requests.post(
             FEDEX_TRACK_URL, json=body, headers=headers, timeout=30
         )
@@ -75,10 +80,11 @@ def fetch_tracking_statuses(tracking_numbers):
         results = data.get("output", {}).get("completeTrackResults", [])
         for item in results:
             track_data = item.get("trackResults", [{}])[0]
-            num = track_data['trackingNumberInfo']['trackingNumber']
-            status = (
-                track_data.get("latestStatusDetail", {}).get("statusByLocale", "Unknown")
-            )
+            num = track_data["trackingNumberInfo"]["trackingNumber"]
+
+            latest_detail = track_data.get("latestStatusDetail", {})
+            status = latest_detail.get("statusByLocale", "Unknown")
+
             statuses.append({"tracking_number": num, "status": status})
 
     return statuses
@@ -90,10 +96,13 @@ def process_tracking_csv(uploaded_file):
         return "No file uploaded", None
     try:
         df = pd.read_csv(uploaded_file)
-        track_col = next(
-            (c for c in df.columns if c.strip().lower() == "tracking number"),
-            None,
-        )
+
+        track_col = None
+        for column in df.columns:
+            if column.strip().lower() == "tracking number":
+                track_col = column
+                break
+
         if track_col is None:
             return "Column 'Tracking Number' not found", None
 
@@ -113,7 +122,11 @@ def process_single_tracking_number(tracking_number):
         return "Tracking number required", None
     try:
         statuses = fetch_tracking_statuses([tracking_number])
-        return "Success", statuses[0] if statuses else None
+        if statuses:
+            first_status = statuses[0]
+        else:
+            first_status = None
+        return "Success", first_status
     except FedExAPIError as exc:
         return str(exc), None
     except Exception as exc:
