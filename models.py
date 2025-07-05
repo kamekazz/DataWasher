@@ -30,6 +30,17 @@ class Labor(db.Model):
         return f"<Labor {self.labor_type}: {self.amount}>"
 
 
+class Staging(db.Model):
+    """Represents a palette placed in a staging bin."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    palette = db.Column(db.String(80), nullable=False)
+    bin = db.Column(db.String(80), nullable=False)
+
+    def __repr__(self) -> str:  # pragma: no cover - simple representation
+        return f"<Staging {self.palette}:{self.bin}>"
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
