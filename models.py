@@ -14,12 +14,16 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
 
     def set_password(self, password: str) -> None:
-        self.password_hash = generate_password_hash(password)
+        hashed = generate_password_hash(password)
+        self.password_hash = hashed
 
     def check_password(self, password: str) -> bool:
-        return check_password_hash(self.password_hash, password)
+        valid = check_password_hash(self.password_hash, password)
+        return valid
 
 
 @login_manager.user_loader
 def load_user(user_id: str):
-    return User.query.get(int(user_id))
+    user_id_int = int(user_id)
+    user = User.query.get(user_id_int)
+    return user

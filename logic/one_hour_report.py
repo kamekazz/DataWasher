@@ -20,10 +20,14 @@ def count_assigned_tasks(uploaded_file):
 
     try:
         df = pd.read_csv(uploaded_file)
-        status_col = next(
-            (c for c in df.columns if c.lower().replace(" ", "") == "status"),
-            None,
-        )
+
+        status_col = None
+        for column in df.columns:
+            normalized = column.lower().replace(" ", "")
+            if normalized == "status":
+                status_col = column
+                break
+
         if status_col is None:
             return (
                 "Required column 'Call Status' not found",
@@ -35,46 +39,36 @@ def count_assigned_tasks(uploaded_file):
 
         assigned_mask = df[status_col].astype(str).str.lower() == "assigned"
         assigned_count = int(assigned_mask.sum())
-        ready_for_assignment = int(
-            (
-                df[status_col].astype(str).str.lower()
-                == "ready for assignment"
-            ).sum()
+
+        ready_mask = (
+            df[status_col].astype(str).str.lower() == "ready for assignment"
         )
+        ready_for_assignment = int(ready_mask.sum())
+
         assigned_df = df[assigned_mask].copy()
 
-        trans_col = next(
-            (
-                c
-                for c in df.columns
-                if c.lower().replace(" ", "") == "transaction"
-            ),
-            None,
-        )
-        task_details_col = next(
-            (
-                c
-                for c in df.columns
-                if c.lower().replace(" ", "")
-                in ["no.oftaskdetails", "nooftaskdetails"]
-            ),
-            None,
-        )
+        trans_col = None
+        for column in df.columns:
+            if column.lower().replace(" ", "") == "transaction":
+                trans_col = column
+                break
+
+        task_details_col = None
+        for column in df.columns:
+            normalized = column.lower().replace(" ", "")
+            if normalized in ["no.oftaskdetails", "nooftaskdetails"]:
+                task_details_col = column
+                break
 
         transaction_summary = None
         assigned_transaction_summary = None
         if trans_col and task_details_col:
-            summary_df = (
-                df.groupby(trans_col)[task_details_col]
-                .sum()
-                .reset_index()
-                .rename(
-                    columns={
-                        trans_col: "transaction",
-                        task_details_col: "task_details",
-                    }
-                )
+            grouped = df.groupby(trans_col)[task_details_col].sum()
+            summary_df = grouped.reset_index()
+            summary_df = summary_df.rename(
+                columns={trans_col: "transaction", task_details_col: "task_details"}
             )
+
             summary_df["task_details"] = summary_df["task_details"].astype(int)
             total_tasks = summary_df["task_details"].sum()
             summary_df["percentage"] = (
@@ -90,11 +84,10 @@ def count_assigned_tasks(uploaded_file):
                 }
             )
 
-            assigned_summary_df = (
-                assigned_df.groupby(trans_col)
-                .size()
-                .reset_index(name="count")
-                .rename(columns={trans_col: "transaction"})
+            assigned_grouped = assigned_df.groupby(trans_col).size()
+            assigned_summary_df = assigned_grouped.reset_index(name="count")
+            assigned_summary_df = assigned_summary_df.rename(
+                columns={trans_col: "transaction"}
             )
             assigned_total = int(assigned_summary_df["count"].sum())
             assigned_summary_df["percentage"] = (
