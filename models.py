@@ -19,6 +19,17 @@ class Driver(db.Model):
         return f"<Driver {self.driver_type}: {self.count}>"
 
 
+class Labor(db.Model):
+    """Represents a unit of labor available for assignments."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    labor_type = db.Column(db.String(80), nullable=False)
+    amount = db.Column(db.Integer, nullable=False, default=0)
+
+    def __repr__(self) -> str:  # pragma: no cover - simple representation
+        return f"<Labor {self.labor_type}: {self.amount}>"
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
