@@ -6,7 +6,7 @@ from logic.tracking_status import (
     process_tracking_csv,
     process_single_tracking_number,
 )
-from models import db, User
+from models import db, User, Driver
 
 bp = Blueprint("main", __name__)
 
@@ -125,6 +125,35 @@ def track_shipments():
         rows=rows,
         tracking_number=tracking_number,
         status=status,
+    )
+
+
+@bp.route("/drivers", methods=["GET", "POST"])
+@login_required
+def drivers():
+    """Create a new driver record and list all existing records."""
+    message = None
+    if request.method == "POST":
+        driver_type = request.form.get("driver_type")
+        count = request.form.get("count")
+        if not driver_type or not count:
+            message = "Type and count are required"
+        else:
+            try:
+                count_int = int(count)
+            except ValueError:
+                message = "Count must be an integer"
+            else:
+                driver = Driver(driver_type=driver_type, count=count_int)
+                db.session.add(driver)
+                db.session.commit()
+                message = f"Added driver type {driver_type}"
+    all_drivers = Driver.query.all()
+    return render_template(
+        "pages/drivers.html",
+        title="Drivers",
+        message=message,
+        drivers=all_drivers,
     )
 
 
