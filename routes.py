@@ -6,7 +6,7 @@ from logic.tracking_status import (
     process_tracking_csv,
     process_single_tracking_number,
 )
-from models import db, User, Driver, Labor
+from models import db, User, Driver, Labor, Staging
 
 bp = Blueprint("main", __name__)
 
@@ -183,6 +183,30 @@ def labor():
         "pages/labor.html",
         title="Labor",
         labor_entries=all_labor,
+    )
+
+
+@bp.route("/staging", methods=["GET", "POST"])
+@login_required
+def staging():
+    """Create a new staging area record and list all existing records."""
+    if request.method == "POST":
+        palette = request.form.get("palette")
+        bin_value = request.form.get("bin")
+        if not palette or not bin_value:
+            flash("Palette and bin are required", "error")
+        else:
+            new_entry = Staging(palette=palette, bin=bin_value)
+            db.session.add(new_entry)
+            db.session.commit()
+            flash("Added to staging", "success")
+        return redirect(url_for("main.staging"))
+
+    all_entries = Staging.query.order_by(Staging.id.desc()).all()
+    return render_template(
+        "pages/staging.html",
+        title="Staging Area",
+        staging_entries=all_entries,
     )
 
 
