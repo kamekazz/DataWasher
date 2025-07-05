@@ -8,6 +8,17 @@ login_manager = LoginManager()
 login_manager.login_view = 'main.login'
 
 
+class Driver(db.Model):
+    """Represents a driver type and how many workers use it."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    driver_type = db.Column(db.String(80), unique=True, nullable=False)
+    count = db.Column(db.Integer, nullable=False, default=0)
+
+    def __repr__(self) -> str:  # pragma: no cover - simple representation
+        return f"<Driver {self.driver_type}: {self.count}>"
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
