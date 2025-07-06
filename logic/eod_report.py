@@ -50,15 +50,15 @@ def count_total_pick(uploaded_file):
     try:
         df = pd.read_csv(uploaded_file)
 
-        required_cols = {"Transaction ID", "Quantities"}
+        required_cols = {"Transaction ID", "Quantity"}
         if not required_cols.issubset(df.columns):
             return None, "Required columns not found"
 
         mask = ~df["Transaction ID"].astype(str).str.contains(
-            "ATML|AMZL|AMXL|TBA|wholesale", case=False, na=False
+            "ATML|AMZL|AMXL|TBA|wholesale|Wholesale|MIXED|LTL|all carriers", case=False, na=False
         )
 
-        total = int(df.loc[mask, "Quantities"].sum())
+        total = int(df.loc[mask, "Quantity"].sum())
         return total, f"Processed {uploaded_file.filename}"
     except Exception as exc:
         return None, f"Error processing file: {exc}"
