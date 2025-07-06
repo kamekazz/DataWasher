@@ -8,18 +8,20 @@
 <body class="pt-16">
     <header class="fixed top-0 left-0 w-full shadow py-2">
         <nav class="flex space-x-4 px-4">
-            <a href="{{ url_for('main.greeting') }}">Greeting</a>
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('main.logout') }}">Logout</a>
-            {% else %}
-                <a href="{{ url_for('main.login') }}">Login</a>
-            {% endif %}
-            <a href="{{ url_for('main.create_user') }}">Create User</a>
+            <a href="{{ url_for('main.logout') }}">Logout</a>
             <a href="{{ url_for('main.home') }}">Home</a>
+            <a href="{{ url_for('main.one_hour_report') }}">1-Hour-Report</a>
+            <a href="{{ url_for('main.eod_report') }}">EOD-Report</a>
             <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
             <a href="{{ url_for('main.track_shipments') }}">Track Shipments</a>
             <a href="{{ url_for('main.drivers') }}">Drivers</a>
             <a href="{{ url_for('main.labor') }}">Labor</a>
             <a href="{{ url_for('main.staging') }}">Staging Area</a>
+            {% else %}
+            <a href="{{ url_for('main.greeting') }}">Greeting</a>
+            <a href="{{ url_for('main.create_user') }}">Create User</a>
+            <a href="{{ url_for('main.login') }}">Login</a>
+            {% endif %}
         </nav>
     </header>

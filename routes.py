@@ -97,6 +97,33 @@ def one_hour_report():
         assigned_summary=assigned_transaction_summary,
     )
 
+@bp.route("/eod-report", methods=["GET", "POST"])
+@login_required
+def eod_report():
+    message = None
+    assign_count = None
+    ready_for_assignment = None
+    transaction_summary = None
+    assigned_transaction_summary = None
+    if request.method == "POST":
+        uploaded_file = request.files.get("file")
+        (
+            message,
+            assign_count,
+            ready_for_assignment,
+            transaction_summary,
+            assigned_transaction_summary,
+        ) = count_assigned_tasks(uploaded_file)
+    return render_template(
+        "pages/eod_report.html",
+        title="1-Hour Report",
+        message=message,
+        assign_count=assign_count,
+        ready_for_assignment=ready_for_assignment,
+        transaction_summary=transaction_summary,
+        assigned_summary=assigned_transaction_summary,
+    )
+
 
 @bp.route("/track-shipments", methods=["GET", "POST"])
 @login_required
