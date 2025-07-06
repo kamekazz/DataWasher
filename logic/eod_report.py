@@ -33,3 +33,32 @@ def count_eod_production(uploaded_file):
 
     except Exception as e:
         return f"Error processing file: {str(e)}", None, None, None
+
+
+def count_total_pick(uploaded_file):
+    """Calculate total units picked from a CSV file.
+
+    The CSV must contain ``Transaction ID`` and ``Quantities`` columns. Rows
+    with a ``Transaction ID`` containing ``ATML``, ``AMZL``, ``AMXL``, ``TBA`` or
+    ``wholesale`` are ignored. The remaining ``Quantities`` values are summed
+    and returned as an integer.
+    """
+
+    if not uploaded_file or not uploaded_file.filename:
+        return None, None
+
+    try:
+        df = pd.read_csv(uploaded_file)
+
+        required_cols = {"Transaction ID", "Quantities"}
+        if not required_cols.issubset(df.columns):
+            return None, "Required columns not found"
+
+        mask = ~df["Transaction ID"].astype(str).str.contains(
+            "ATML|AMZL|AMXL|TBA|wholesale", case=False, na=False
+        )
+
+        total = int(df.loc[mask, "Quantities"].sum())
+        return total, f"Processed {uploaded_file.filename}"
+    except Exception as exc:
+        return None, f"Error processing file: {exc}"

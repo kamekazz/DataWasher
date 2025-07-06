@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required
 from logic.one_hour_report import count_assigned_tasks
-from logic.eod_report import count_eod_production
+from logic.eod_report import count_total_pick
 from logic.tracking_status import (
     process_tracking_csv,
     process_single_tracking_number,
@@ -102,24 +102,15 @@ def one_hour_report():
 @login_required
 def eod_report():
     message = None
-    units_picked = 1
-    units_Bundled = 1
-    units_folded = 1
+    units_picked = None
     if request.method == "POST":
         uploaded_file = request.files.get("file")
-        (
-            message,
-            units_picked,
-            units_Bundled,
-            units_folded,    
-        ) = count_eod_production(uploaded_file)
+        units_picked, message = count_total_pick(uploaded_file)
     return render_template(
         "pages/eod_report.html",
-        title="1-Hour Report",
+        title="EOD Report",
         message=message,
         units_picked=units_picked,
-        units_Bundled=units_Bundled,
-        units_folded=units_folded,
     )
 
 
