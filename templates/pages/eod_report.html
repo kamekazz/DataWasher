@@ -9,16 +9,21 @@
         <input id="file" name="file" type="file" class="border p-2 rounded w-full" />
         <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Upload</button>
     </form>
-
-    <h2 class="text-xl font-bold mt-4">H2</h2>
-    <p>1234</p>
-
-    <h2 class="text-xl font-bold mt-4">H2</h2>
-    <p>1234</p>
-
-    <h2 class="text-xl font-bold mt-4">H2</h2>
-    <p>1234</p>
-
+    {% if units_picked is not none %}
+    <h2 class="text-xl font-bold mt-4">Units Picked</h2>
+    <p style="color: rgb(255, 0, 0);">3096</p>
+    <p>{{units_picked}}</p>
+    {% endif %}
+    {% if units_Bundled is not none %}
+    <h2 class="text-xl font-bold mt-4">Units Bundled</h2>
+    <p style="color: rgb(255, 0, 0);">1358</p>
+    <p>{{units_Bundled}}</p>
+    {% endif %}
+    {% if units_folded is not none %}
+    <h2 class="text-xl font-bold mt-4">Units Folded</h2>
+    <p style="color: rgb(255, 0, 0);">168</p>
+    <p>{{units_folded}}</p>
+    {% endif %}
 
 </div>
 {% include 'elements/footer.html' %}
