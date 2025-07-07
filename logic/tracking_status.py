@@ -2,20 +2,17 @@ import os
 import pandas as pd
 import requests
 
-FEDEX_URL = None
-FEDEX_CLIENT_SECRET = None
-FEDEX_CLIENT_ID = None
-FEDEX_PRO_URL = "https://apis.fedex.com"
-FEDEX_TEST_URL = "https://apis-sandbox.fedex.com"
 
 
-FEDEX_URL = FEDEX_PRO_URL
+
+
+
 FEDEX_CLIENT_SECRET = os.getenv("FEDEX_CLIENT_SECRET_PRO")
 FEDEX_CLIENT_ID = os.getenv("FEDEX_CLIENT_ID_PRO")
+print(FEDEX_CLIENT_ID,"-----", FEDEX_CLIENT_SECRET)
 
-
-FEDEX_OAUTH_URL = f"{FEDEX_URL}/oauth/token"
-FEDEX_TRACK_URL = f"{FEDEX_URL}/track/v1/trackingnumbers"
+FEDEX_OAUTH_URL = "https://apis.fedex.com/oauth/token"
+FEDEX_TRACK_URL = "https://apis.fedex.com/track/v1/trackingnumbers"
 
 
 class FedExAPIError(Exception):
