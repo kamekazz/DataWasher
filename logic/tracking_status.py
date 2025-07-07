@@ -8,14 +8,11 @@ FEDEX_CLIENT_ID = None
 FEDEX_PRO_URL = "https://apis.fedex.com"
 FEDEX_TEST_URL = "https://apis-sandbox.fedex.com"
 
-if os.getenv("FLASK_ENV") == "production":
-    FEDEX_URL = FEDEX_PRO_URL
-    FEDEX_CLIENT_SECRET = os.getenv("FEDEX_CLIENT_SECRET_PRO")
-    FEDEX_CLIENT_ID = os.getenv("FEDEX_CLIENT_ID_PRO")
-else:
-    FEDEX_URL = FEDEX_TEST_URL
-    FEDEX_CLIENT_SECRET = os.getenv("FEDEX_CLIENT_SECRET")
-    FEDEX_CLIENT_ID = os.getenv("FEDEX_CLIENT_ID")
+
+FEDEX_URL = FEDEX_PRO_URL
+FEDEX_CLIENT_SECRET = os.getenv("FEDEX_CLIENT_SECRET_PRO")
+FEDEX_CLIENT_ID = os.getenv("FEDEX_CLIENT_ID_PRO")
+
 
 FEDEX_OAUTH_URL = f"{FEDEX_URL}/oauth/token"
 FEDEX_TRACK_URL = f"{FEDEX_URL}/track/v1/trackingnumbers"
