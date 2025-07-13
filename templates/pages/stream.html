@@ -1,0 +1,11 @@
+{% include 'elements/header.html' %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4">Live Stream</h1>
+    <div class="mb-4">
+        <button id="startBtn" class="bg-green-500 text-white px-4 py-2 mr-2 rounded">Start</button>
+        <button id="stopBtn" class="bg-red-500 text-white px-4 py-2 rounded">Stop</button>
+    </div>
+    <img id="stream" class="w-full" />
+</div>
+<script src="{{ url_for('static', filename='js/stream.js') }}"></script>
+{% include 'elements/footer.html' %}

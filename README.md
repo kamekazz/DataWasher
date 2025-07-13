@@ -38,3 +38,7 @@ Authenticated users can either enter a single FedEx tracking number or upload a 
 3. Set environment variables `FEDEX_CLIENT_ID` and `FEDEX_CLIENT_SECRET` with these credentials before running the application.
 4. When a tracking number or file is submitted, the app obtains an OAuth token and calls `https://apis.fedex.com/track/v1/trackingnumbers` to fetch statuses.
 
+## Live Camera Streaming
+
+Set `CAMERA_IP` and `CAMERA_PASS` in a `.env` file to connect to the Reolink RTSP stream. Start the application using `./start-services.sh` and visit `/stream` to see the real-time video with barcode overlays. Use the on-page controls to start or stop detection. Each detected pallet is logged with timestamp and position.
+
