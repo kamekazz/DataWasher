@@ -41,6 +41,19 @@ class Staging(db.Model):
         return f"<Staging {self.palette}:{self.bin}>"
 
 
+class PalletLog(db.Model):
+    """Logs detected pallet barcodes and approximate positions."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    pallet_id = db.Column(db.String(120), nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
+    x = db.Column(db.Integer, nullable=True)
+    y = db.Column(db.Integer, nullable=True)
+
+    def __repr__(self) -> str:  # pragma: no cover - simple representation
+        return f"<PalletLog {self.pallet_id} @ {self.timestamp}>"
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
