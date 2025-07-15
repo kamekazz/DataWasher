@@ -8,51 +8,6 @@ login_manager = LoginManager()
 login_manager.login_view = 'main.login'
 
 
-class Driver(db.Model):
-    """Represents a driver type and how many workers use it."""
-
-    id = db.Column(db.Integer, primary_key=True)
-    driver_type = db.Column(db.String(80), unique=True, nullable=False)
-    count = db.Column(db.Integer, nullable=False, default=0)
-
-    def __repr__(self) -> str:  # pragma: no cover - simple representation
-        return f"<Driver {self.driver_type}: {self.count}>"
-
-
-class Labor(db.Model):
-    """Represents a unit of labor available for assignments."""
-
-    id = db.Column(db.Integer, primary_key=True)
-    labor_type = db.Column(db.String(80), nullable=False)
-    amount = db.Column(db.Integer, nullable=False, default=0)
-
-    def __repr__(self) -> str:  # pragma: no cover - simple representation
-        return f"<Labor {self.labor_type}: {self.amount}>"
-
-
-class Staging(db.Model):
-    """Represents a palette placed in a staging bin."""
-
-    id = db.Column(db.Integer, primary_key=True)
-    palette = db.Column(db.String(80), nullable=False)
-    bin = db.Column(db.String(80), nullable=False)
-
-    def __repr__(self) -> str:  # pragma: no cover - simple representation
-        return f"<Staging {self.palette}:{self.bin}>"
-
-
-class PalletLog(db.Model):
-    """Logs detected pallet barcodes and approximate positions."""
-
-    id = db.Column(db.Integer, primary_key=True)
-    pallet_id = db.Column(db.String(120), nullable=False)
-    timestamp = db.Column(db.DateTime, nullable=False)
-    x = db.Column(db.Integer, nullable=True)
-    y = db.Column(db.Integer, nullable=True)
-
-    def __repr__(self) -> str:  # pragma: no cover - simple representation
-        return f"<PalletLog {self.pallet_id} @ {self.timestamp}>"
-
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
