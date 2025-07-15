@@ -1,5 +1,4 @@
 import os
-import time
 from flask import (
     Blueprint,
     render_template,
@@ -7,12 +6,8 @@ from flask import (
     redirect,
     url_for,
     flash,
-    Response,
-    stream_with_context,
-    jsonify,
 )
-from queue import Queue, Empty
-from logic.detection import DetectionService
+
 from flask_login import login_user, logout_user, login_required
 from logic.one_hour_report import count_assigned_tasks
 from logic.eod_report import count_total_pick
@@ -20,14 +15,10 @@ from logic.tracking_status import (
     process_tracking_csv,
     process_single_tracking_number,
 )
-from models import db, User, Driver, Labor, Staging
+from models import db, User
 
 bp = Blueprint("main", __name__)
 
-# shared queue for streaming frames
-frame_queue = Queue(maxsize=1)
-# detection service instance
-detector = DetectionService(frame_queue)
 
 
 @bp.route("/")
@@ -162,87 +153,6 @@ def track_shipments():
     )
 
 
-@bp.route("/drivers", methods=["GET", "POST"])
-@login_required
-def drivers():
-    """Create a new driver record and list all existing records."""
-    message = None
-    if request.method == "POST":
-        driver_type = request.form.get("driver_type")
-        count = request.form.get("count")
-        if not driver_type or not count:
-            message = "Type and count are required"
-        else:
-            try:
-                count_int = int(count)
-            except ValueError:
-                message = "Count must be an integer"
-            else:
-                driver = Driver(driver_type=driver_type, count=count_int)
-                db.session.add(driver)
-                db.session.commit()
-                message = f"Added driver type {driver_type}"
-    all_drivers = Driver.query.all()
-    return render_template(
-        "pages/drivers.html",
-        title="Drivers",
-        message=message,
-        drivers=all_drivers,
-    )
-
-
-@bp.route("/labor", methods=["GET", "POST"])
-@login_required
-def labor():
-    """Create a new labor record and list all existing records."""
-    if request.method == "POST":
-        labor_type = request.form.get("labor_type")
-        amount = request.form.get("amount")
-        if not labor_type or not amount:
-            flash("Labor type and amount are required", "error")
-        else:
-            try:
-                amount_int = int(amount)
-            except ValueError:
-                flash("Amount must be an integer", "error")
-            else:
-                new_labor = Labor(labor_type=labor_type, amount=amount_int)
-                db.session.add(new_labor)
-                db.session.commit()
-                flash(f"Added labor type {labor_type}", "success")
-        return redirect(url_for("main.labor"))
-
-    all_labor = Labor.query.all()
-    return render_template(
-        "pages/labor.html",
-        title="Labor",
-        labor_entries=all_labor,
-    )
-
-
-@bp.route("/staging", methods=["GET", "POST"])
-@login_required
-def staging():
-    """Create a new staging area record and list all existing records."""
-    if request.method == "POST":
-        palette = request.form.get("palette")
-        bin_value = request.form.get("bin")
-        if not palette or not bin_value:
-            flash("Palette and bin are required", "error")
-        else:
-            new_entry = Staging(palette=palette, bin=bin_value)
-            db.session.add(new_entry)
-            db.session.commit()
-            flash("Added to staging", "success")
-        return redirect(url_for("main.staging"))
-
-    all_entries = Staging.query.order_by(Staging.id.desc()).all()
-    return render_template(
-        "pages/staging.html",
-        title="Staging Area",
-        staging_entries=all_entries,
-    )
-
 
 @bp.route("/greet/<name>")
 def greet(name):
@@ -256,43 +166,3 @@ def handle_url_params():
     return f"<h2>greeting: {greeting}, name: {name}</h2>"
 
 
-# ---------- Streaming and Detection Routes ----------
-
-@bp.route("/stream")
-@login_required
-def stream_page():
-    return render_template("pages/stream.html", title="Live Stream")
-
-
-@bp.route("/start-detection")
-@login_required
-def start_detection():
-    if not detector.is_alive():
-        detector.start()
-    return ("", 204)
-
-
-@bp.route("/stop-detection")
-@login_required
-def stop_detection():
-    if detector.is_alive():
-        detector.stop()
-    return ("", 204)
-
-
-@bp.route("/video_feed")
-@login_required
-def video_feed():
-    def generate():
-        while True:
-            try:
-                frame = frame_queue.get(timeout=1)
-            except Empty:
-                continue
-            yield f"data: {frame}\n\n"
-    return Response(stream_with_context(generate()), mimetype="text/event-stream")
-
-
-@bp.route("/healthz")
-def healthz():
-    return jsonify({"status": "ok", "detector_running": detector.is_alive()})
