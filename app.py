@@ -25,7 +25,7 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     app.run(
-        debug=os.getenv("DEBUG"),
+        debug=os.getenv("DEBUG", "False"), # type: ignore
         host=os.getenv("HOST"),
-        port=os.getenv("PORT", 5000),
+        port=int(os.getenv("PORT", 5000)),
     )
