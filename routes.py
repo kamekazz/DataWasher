@@ -15,7 +15,7 @@ from logic.tracking_status import (
     process_tracking_csv,
     process_single_tracking_number,
 )
-from models import db, User
+from models import db, User, WorkType
 
 bp = Blueprint("main", __name__)
 
@@ -157,6 +157,70 @@ def track_shipments():
 @bp.route("/greet/<name>")
 def greet(name):
     return f"<p>Hello, {name}!</p>"
+
+
+@bp.route("/work-types")
+@login_required
+def list_work_types():
+    work_types = WorkType.query.order_by(WorkType.name).all()
+    return render_template(
+        "pages/work_type_list.html", title="Work Types", work_types=work_types
+    )
+
+
+@bp.route("/work-types/new", methods=["GET", "POST"])
+@login_required
+def create_work_type():
+    message = None
+    if request.method == "POST":
+        name = request.form.get("name")
+        if not name:
+            message = "Name is required"
+        elif WorkType.query.filter_by(name=name).first():
+            message = "Work Type already exists"
+        else:
+            wt = WorkType(name=name)
+            db.session.add(wt)
+            db.session.commit()
+            return redirect(url_for("main.list_work_types"))
+    return render_template(
+        "pages/work_type_form.html",
+        title="Create Work Type",
+        message=message,
+        work_type=None,
+    )
+
+
+@bp.route("/work-types/<int:work_type_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_work_type(work_type_id):
+    work_type = WorkType.query.get_or_404(work_type_id)
+    message = None
+    if request.method == "POST":
+        name = request.form.get("name")
+        if not name:
+            message = "Name is required"
+        elif WorkType.query.filter_by(name=name).first() and name != work_type.name:
+            message = "Work Type already exists"
+        else:
+            work_type.name = name
+            db.session.commit()
+            return redirect(url_for("main.list_work_types"))
+    return render_template(
+        "pages/work_type_form.html",
+        title="Edit Work Type",
+        message=message,
+        work_type=work_type,
+    )
+
+
+@bp.route("/work-types/<int:work_type_id>/delete", methods=["POST"])
+@login_required
+def delete_work_type(work_type_id):
+    work_type = WorkType.query.get_or_404(work_type_id)
+    db.session.delete(work_type)
+    db.session.commit()
+    return redirect(url_for("main.list_work_types"))
 
 
 @bp.route("/handle_url_params")
