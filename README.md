@@ -38,3 +38,7 @@ Authenticated users can either enter a single FedEx tracking number or upload a 
 3. Set environment variables `FEDEX_CLIENT_ID` and `FEDEX_CLIENT_SECRET` with these credentials before running the application.
 4. When a tracking number or file is submitted, the app obtains an OAuth token and calls `https://apis.fedex.com/track/v1/trackingnumbers` to fetch statuses.
 
+## Labor management
+
+Users can record labor assignments linked to an existing work type.  Each entry stores the job name and how many people are assigned.  Use the **Labor** page from the navigation bar to create, edit or delete entries.
+

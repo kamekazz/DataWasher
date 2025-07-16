@@ -36,3 +36,13 @@ class WorkType(db.Model):
     name = db.Column(db.String(128), nullable=False, unique=True)
     # description = db.Column(db.String(256), nullable=True)
 
+
+class Labor(db.Model):
+    __tablename__ = "labors"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    num_people = db.Column(db.Integer, nullable=False)
+    work_type_id = db.Column(db.Integer, db.ForeignKey("work_types.id"), nullable=False)
+
+    work_type = db.relationship("WorkType", backref=db.backref("labors", lazy=True))
+

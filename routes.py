@@ -15,7 +15,7 @@ from logic.tracking_status import (
     process_tracking_csv,
     process_single_tracking_number,
 )
-from models import db, User, WorkType
+from models import db, User, WorkType, Labor
 
 bp = Blueprint("main", __name__)
 
@@ -221,6 +221,98 @@ def delete_work_type(work_type_id):
     db.session.delete(work_type)
     db.session.commit()
     return redirect(url_for("main.list_work_types"))
+
+
+@bp.route("/labors")
+@login_required
+def list_labors():
+    labors = Labor.query.order_by(Labor.name).all()
+    return render_template(
+        "pages/labor_list.html", title="Labor", labors=labors
+    )
+
+
+@bp.route("/labors/new", methods=["GET", "POST"])
+@login_required
+def create_labor():
+    work_types = WorkType.query.order_by(WorkType.name).all()
+    message = None
+    if request.method == "POST":
+        name = request.form.get("name")
+        num_people = request.form.get("num_people")
+        work_type_id = request.form.get("work_type_id")
+        if not name or not num_people or not work_type_id:
+            message = "All fields are required"
+        else:
+            try:
+                num_people_int = int(num_people)
+            except ValueError:
+                message = "Number of People must be an integer"
+            else:
+                wt = WorkType.query.get(work_type_id)
+                if not wt:
+                    message = "Invalid Work Type"
+                else:
+                    labor = Labor(
+                        name=name,
+                        num_people=num_people_int,
+                        work_type=wt,
+                    )
+                    db.session.add(labor)
+                    db.session.commit()
+                    return redirect(url_for("main.list_labors"))
+    return render_template(
+        "pages/labor_form.html",
+        title="Create Labor",
+        message=message,
+        labor=None,
+        work_types=work_types,
+    )
+
+
+@bp.route("/labors/<int:labor_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_labor(labor_id):
+    labor = Labor.query.get_or_404(labor_id)
+    work_types = WorkType.query.order_by(WorkType.name).all()
+    message = None
+    if request.method == "POST":
+        name = request.form.get("name")
+        num_people = request.form.get("num_people")
+        work_type_id = request.form.get("work_type_id")
+        if not name or not num_people or not work_type_id:
+            message = "All fields are required"
+        else:
+            try:
+                num_people_int = int(num_people)
+            except ValueError:
+                message = "Number of People must be an integer"
+            else:
+                wt = WorkType.query.get(work_type_id)
+                if not wt:
+                    message = "Invalid Work Type"
+                else:
+                    labor.name = name
+                    labor.num_people = num_people_int
+                    labor.work_type = wt
+                    db.session.commit()
+                    return redirect(url_for("main.list_labors"))
+    return render_template(
+        "pages/labor_form.html",
+        title="Edit Labor",
+        message=message,
+        labor=labor,
+        work_types=work_types,
+    )
+
+
+@bp.route("/labors/<int:labor_id>/delete", methods=["POST"])
+@login_required
+def delete_labor(labor_id):
+    labor = Labor.query.get_or_404(labor_id)
+    db.session.delete(labor)
+    db.session.commit()
+    return redirect(url_for("main.list_labors"))
 
 
 @bp.route("/handle_url_params")

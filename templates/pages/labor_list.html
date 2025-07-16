@@ -1,0 +1,35 @@
+{% include 'elements/header.html' %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4">Labor</h1>
+    <a href="{{ url_for('main.create_labor') }}" class="mb-4 inline-block px-4 py-2 bg-blue-500 text-white rounded">New Labor</a>
+    {% if labors %}
+    <table class="table-auto border-collapse palette-table mt-2">
+        <thead>
+            <tr>
+                <th class="border px-4 py-2">Name</th>
+                <th class="border px-4 py-2">Work Type</th>
+                <th class="border px-4 py-2">People</th>
+                <th class="border px-4 py-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for labor in labors %}
+            <tr>
+                <td class="border px-4 py-2">{{ labor.name }}</td>
+                <td class="border px-4 py-2">{{ labor.work_type.name }}</td>
+                <td class="border px-4 py-2">{{ labor.num_people }}</td>
+                <td class="border px-4 py-2">
+                    <a href="{{ url_for('main.edit_labor', labor_id=labor.id) }}" class="text-blue-600 mr-2">Edit</a>
+                    <form method="post" action="{{ url_for('main.delete_labor', labor_id=labor.id) }}" style="display:inline">
+                        <button type="submit" class="text-red-600" onclick="return confirm('Delete this labor entry?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No labor entries found.</p>
+    {% endif %}
+</div>
+{% include 'elements/footer.html' %}
