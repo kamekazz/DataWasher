@@ -46,3 +46,18 @@ class Labor(db.Model):
 
     work_type = db.relationship("WorkType", backref=db.backref("labors", lazy=True))
 
+
+class StagedInventory(db.Model):
+    """Inventory sitting on the floor waiting to be processed."""
+
+    __tablename__ = "staged_inventory"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    labor_id = db.Column(
+        db.Integer, db.ForeignKey("labors.id"), nullable=False
+    )
+
+    labor = db.relationship("Labor", backref=db.backref("staged_items", lazy=True))
+
