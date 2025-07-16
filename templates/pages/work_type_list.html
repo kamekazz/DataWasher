@@ -1,0 +1,31 @@
+{% include 'elements/header.html' %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4">Work Types</h1>
+    <a href="{{ url_for('main.create_work_type') }}" class="mb-4 inline-block px-4 py-2 bg-blue-500 text-white rounded">New Work Type</a>
+    {% if work_types %}
+    <table class="table-auto border-collapse palette-table mt-2">
+        <thead>
+            <tr>
+                <th class="border px-4 py-2">Name</th>
+                <th class="border px-4 py-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for wt in work_types %}
+            <tr>
+                <td class="border px-4 py-2">{{ wt.name }}</td>
+                <td class="border px-4 py-2">
+                    <a href="{{ url_for('main.edit_work_type', work_type_id=wt.id) }}" class="text-blue-600 mr-2">Edit</a>
+                    <form method="post" action="{{ url_for('main.delete_work_type', work_type_id=wt.id) }}" style="display:inline">
+                        <button type="submit" class="text-red-600" onclick="return confirm('Delete this work type?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No work types found.</p>
+    {% endif %}
+</div>
+{% include 'elements/footer.html' %}

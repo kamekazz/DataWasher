@@ -28,3 +28,11 @@ def load_user(user_id: str):
     user_id_int = int(user_id)
     user = User.query.get(user_id_int)
     return user
+
+
+class WorkType(db.Model):
+    __tablename__ = "work_types"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False, unique=True)
+    # description = db.Column(db.String(256), nullable=True)
+
