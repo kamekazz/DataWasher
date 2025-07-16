@@ -1,0 +1,35 @@
+{% include 'elements/header.html' %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4">Staged Inventory</h1>
+    <a href="{{ url_for('main.create_staged_item') }}" class="mb-4 inline-block px-4 py-2 bg-blue-500 text-white rounded">New Entry</a>
+    {% if items %}
+    <table class="table-auto border-collapse palette-table mt-2">
+        <thead>
+            <tr>
+                <th class="border px-4 py-2">Name</th>
+                <th class="border px-4 py-2">Amount</th>
+                <th class="border px-4 py-2">Job</th>
+                <th class="border px-4 py-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            <tr>
+                <td class="border px-4 py-2">{{ item.name }}</td>
+                <td class="border px-4 py-2">{{ item.amount }}</td>
+                <td class="border px-4 py-2">{{ item.labor.name }}</td>
+                <td class="border px-4 py-2">
+                    <a href="{{ url_for('main.edit_staged_item', item_id=item.id) }}" class="text-blue-600 mr-2">Edit</a>
+                    <form method="post" action="{{ url_for('main.delete_staged_item', item_id=item.id) }}" style="display:inline">
+                        <button type="submit" class="text-red-600" onclick="return confirm('Delete this entry?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No staged inventory entries found.</p>
+    {% endif %}
+</div>
+{% include 'elements/footer.html' %}

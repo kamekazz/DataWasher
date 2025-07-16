@@ -42,3 +42,7 @@ Authenticated users can either enter a single FedEx tracking number or upload a 
 
 Users can record labor assignments linked to an existing work type.  Each entry stores the job name and how many people are assigned.  Use the **Labor** page from the navigation bar to create, edit or delete entries.
 
+## Staged inventory
+
+Keep track of pallets or bins currently sitting on the warehouse floor.  Each entry stores the product name, quantity and the job it is associated with.  Use the **Staged Inventory** page to record, update or remove these items.
+

@@ -15,7 +15,7 @@ from logic.tracking_status import (
     process_tracking_csv,
     process_single_tracking_number,
 )
-from models import db, User, WorkType, Labor
+from models import db, User, WorkType, Labor, StagedInventory
 
 bp = Blueprint("main", __name__)
 
@@ -313,6 +313,94 @@ def delete_labor(labor_id):
     db.session.delete(labor)
     db.session.commit()
     return redirect(url_for("main.list_labors"))
+
+
+@bp.route("/staged-items")
+@login_required
+def list_staged_items():
+    items = StagedInventory.query.order_by(StagedInventory.name).all()
+    return render_template(
+        "pages/staged_inventory_list.html", title="Staged Inventory", items=items
+    )
+
+
+@bp.route("/staged-items/new", methods=["GET", "POST"])
+@login_required
+def create_staged_item():
+    labors = Labor.query.order_by(Labor.name).all()
+    message = None
+    if request.method == "POST":
+        name = request.form.get("name")
+        amount = request.form.get("amount")
+        labor_id = request.form.get("labor_id")
+        if not name or not amount or not labor_id:
+            message = "All fields are required"
+        else:
+            try:
+                amount_int = int(amount)
+            except ValueError:
+                message = "Amount must be an integer"
+            else:
+                labor = Labor.query.get(labor_id)
+                if not labor:
+                    message = "Invalid Job"
+                else:
+                    item = StagedInventory(name=name, amount=amount_int, labor=labor)
+                    db.session.add(item)
+                    db.session.commit()
+                    return redirect(url_for("main.list_staged_items"))
+    return render_template(
+        "pages/staged_inventory_form.html",
+        title="Create Inventory",
+        message=message,
+        item=None,
+        labors=labors,
+    )
+
+
+@bp.route("/staged-items/<int:item_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_staged_item(item_id):
+    item = StagedInventory.query.get_or_404(item_id)
+    labors = Labor.query.order_by(Labor.name).all()
+    message = None
+    if request.method == "POST":
+        name = request.form.get("name")
+        amount = request.form.get("amount")
+        labor_id = request.form.get("labor_id")
+        if not name or not amount or not labor_id:
+            message = "All fields are required"
+        else:
+            try:
+                amount_int = int(amount)
+            except ValueError:
+                message = "Amount must be an integer"
+            else:
+                labor = Labor.query.get(labor_id)
+                if not labor:
+                    message = "Invalid Job"
+                else:
+                    item.name = name
+                    item.amount = amount_int
+                    item.labor = labor
+                    db.session.commit()
+                    return redirect(url_for("main.list_staged_items"))
+    return render_template(
+        "pages/staged_inventory_form.html",
+        title="Edit Inventory",
+        message=message,
+        item=item,
+        labors=labors,
+    )
+
+
+@bp.route("/staged-items/<int:item_id>/delete", methods=["POST"])
+@login_required
+def delete_staged_item(item_id):
+    item = StagedInventory.query.get_or_404(item_id)
+    db.session.delete(item)
+    db.session.commit()
+    return redirect(url_for("main.list_staged_items"))
 
 
 @bp.route("/handle_url_params")
