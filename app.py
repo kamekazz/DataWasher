@@ -1,12 +1,12 @@
+from dotenv import load_dotenv
+load_dotenv()
 from flask import Flask
 from models import db, login_manager
 from routes import bp
-from dotenv import load_dotenv
 import os
 
 
 def create_app():
-    load_dotenv()
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///datawasher.db"
