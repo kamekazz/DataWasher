@@ -25,7 +25,7 @@ templates/
 
 ## Styling
 
-The application includes a small custom CSS file under `static/styles/`. A color palette is defined in `static/styles/color-palette.css` using CSS variables. Import this file in your styles to access consistent colors across the UI. The templates already apply these variables via helper classes in `custom.css` to color links and tables.
+The application includes a small custom CSS file under `static/styles/`. A color palette is defined in `static/styles/color-palette.css` using CSS variables. Import this file in your styles to access consistent colors across the UI. The templates already apply these variables via helper classes in `custom.css` to color links and tables....
 
 ## Shipment Tracking
 
