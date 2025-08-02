@@ -1,4 +1,6 @@
 import os
+import cv2
+import numpy as np
 from flask import (
     Blueprint,
     render_template,
@@ -153,6 +155,31 @@ def track_shipments():
     )
 
 
+
+@bp.route("/barcode-scan", methods=["GET", "POST"])
+@login_required
+def barcode_scan():
+    message = None
+    decoded = None
+    if request.method == "POST":
+        uploaded_file = request.files.get("file")
+        if uploaded_file and uploaded_file.filename:
+            file_bytes = np.frombuffer(uploaded_file.read(), np.uint8)
+            image = cv2.imdecode(file_bytes, cv2.IMREAD_GRAYSCALE)
+            detector = cv2.barcode_BarcodeDetector()
+            ok, decoded_info, _, _ = detector.detectAndDecode(image)
+            if ok and decoded_info:
+                decoded = decoded_info[0]
+            else:
+                message = "No barcode detected"
+        else:
+            message = "No file uploaded"
+    return render_template(
+        "pages/barcode_scan.html",
+        title="Barcode Scan",
+        message=message,
+        decoded=decoded,
+    )
 
 @bp.route("/greet/<name>")
 def greet(name):
