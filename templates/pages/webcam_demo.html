@@ -1,0 +1,9 @@
+{% include 'elements/header.html' %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4">Webcam Demo</h1>
+    <video id="videoInput" width="640" height="480" autoplay class="border"></video>
+    <canvas id="canvasOutput" width="640" height="480" class="border"></canvas>
+</div>
+<script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+<script src="{{ url_for('static', filename='js/webcam_demo.js') }}"></script>
+{% include 'elements/footer.html' %}
