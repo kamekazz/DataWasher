@@ -181,6 +181,11 @@ def barcode_scan():
         decoded=decoded,
     )
 
+
+@bp.route("/webcam-demo")
+def webcam_demo():
+    return render_template("pages/webcam_demo.html", title="Webcam Demo")
+
 @bp.route("/greet/<name>")
 def greet(name):
     return f"<p>Hello, {name}!</p>"
