@@ -2,8 +2,11 @@
 <div class="container mx-auto px-4">
     <h1 class="text-2xl font-bold mb-4">Webcam Barcode Scanner</h1>
     <div class="flex">
-        <div id="video-container" class="border"></div>
-        <div id="barcode-results" class="ml-4 text-green-600"></div>
+        <div id="video-container" class="border-4 border-gray-300"></div>
+        <div class="ml-4">
+            <div id="primary-barcode" class="font-bold mb-2"></div>
+            <div id="barcode-results"></div>
+        </div>
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
