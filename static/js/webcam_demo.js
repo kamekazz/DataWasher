@@ -5,6 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
   let primaryCode = '';
   let lastCode = null;
 
+  const ERROR_THRESHOLD = 0.1;
+
+  const computeAverageError = decodedCodes => {
+    const errors = decodedCodes
+      .filter(code => code.error !== undefined)
+      .map(code => code.error);
+    if (!errors.length) {
+      return 0;
+    }
+    return errors.reduce((sum, err) => sum + err, 0) / errors.length;
+  };
+
   primaryInput.addEventListener('input', () => {
     primaryCode = primaryInput.value.trim();
     if (!primaryCode) {
@@ -48,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   Quagga.onDetected(data => {
     const code = data.codeResult.code;
+    const error = computeAverageError(data.codeResult.decodedCodes || []);
+    if (error > ERROR_THRESHOLD) {
+      return;
+    }
     if (code === lastCode) {
       return;
     }
