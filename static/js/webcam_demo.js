@@ -1,9 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
   const results = document.getElementById('barcode-results');
-  const primary = document.getElementById('primary-barcode');
+  const primaryInput = document.getElementById('primary-barcode-input');
   const video = document.getElementById('video-container');
-  let primaryCode = null;
+  let primaryCode = '';
   let lastCode = null;
+
+  primaryInput.addEventListener('input', () => {
+    primaryCode = primaryInput.value.trim();
+    if (!primaryCode) {
+      video.classList.remove('border-red-500', 'border-green-500');
+      video.classList.add('border-gray-300');
+    }
+  });
 
   Quagga.init({
     inputStream: {
@@ -47,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!primaryCode) {
       primaryCode = code;
-      primary.textContent = `Primary Barcode: ${code}`;
+      primaryInput.value = code;
       video.classList.remove('border-red-500', 'border-gray-300');
       video.classList.add('border-green-500');
       return;
