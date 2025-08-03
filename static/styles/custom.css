@@ -45,3 +45,9 @@ header {
     transform: translate(-50%, -50%);
 }
 
+/* Ensure images scale on small screens */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
