@@ -159,9 +159,9 @@ def track_shipments():
 
 
 
-@bp.route("/webcam-demo")
-def webcam_demo():
-    return render_template("pages/webcam_demo.html", title="Webcam Demo")
+@bp.route("/scanner")
+def scanner():
+    return render_template("pages/barcode_scan.html", title="Scanner")
 
 @bp.route("/greet/<name>")
 def greet(name):

@@ -1,1 +1,13 @@
-
+{% include 'elements/header.html' %}
+<div class="container mx-auto px-4">
+  <h1 class="text-2xl font-bold mb-4">Barcode Scanner</h1>
+  <div id="interactive" class="w-full max-w-md mx-auto"></div>
+  <div class="mt-4">
+    <label for="scan-result" class="font-bold block mb-2">Last Scan:</label>
+    <input id="scan-result" type="text" class="border p-1 w-full" readonly />
+  </div>
+  <div id="scan-history" class="mt-4 max-h-60 overflow-y-auto border p-2"></div>
+</div>
+<script src="https://unpkg.com/@ericblade/quagga2/dist/quagga.js"></script>
+<script src="{{ url_for('static', filename='js/scanner.js') }}"></script>
+{% include 'elements/footer.html' %}
