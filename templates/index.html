@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Dynamsoft DBR v11 Demo</title>
+
+  <!-- Camera helper (handles webcam feed + UI buttons) -->
+  <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.0/dist/dce.js"></script>
+
+  <!-- Barcode engine v11 -->
+  <script src="https://cdn.jsdelivr.net/npm/dynamsoft-javascript-barcode@11.0.3000/dist/dbr.js"></script>
+
+  <style>
+    body { font: 16px/1.4 system-ui, sans-serif; margin: 2rem; }
+    #result { margin-top: 1rem; font-size: 1.25rem; }
+  </style>
+</head>
+<body>
+  <h1>DBR v11 Webcam Scanner</h1>
+  <div id="scanner"></div>
+  <div id="result">Waiting for a scan…</div>
+
+  <script type="module">
+    /* 1 – license */
+    Dynamsoft.DBR.BarcodeReader.license = "YOUR-TRIAL-KEY";
+
+    /* 2 – tell DBR where to fetch its WASM engine */
+    Dynamsoft.DBR.BarcodeReader.engineResourcePath =
+      "https://cdn.jsdelivr.net/npm/dynamsoft-javascript-barcode@11.0.3000/dist/";
+
+    /* 3 – dedupe helper so one code = one beep */
+    const debounce = (fn, ms = 800) => {
+      let last = 0, code = '';
+      return (txt, res) => {
+        const now = Date.now();
+        if (txt !== code || now - last > ms) {
+          last = now; code = txt; fn(txt, res);
+        }
+      };
+    };
+
+    /* 4 – spin up the scanner (runs in a Web Worker) */
+    const scanner = await Dynamsoft.DBR.BarcodeScanner.createInstance();
+
+    /* 5 – fast preset, only Code-128 + QR */
+    await scanner.updateRuntimeSettings("speed");
+    scanner.setFormat(
+      Dynamsoft.DBR.EnumBarcodeFormat.BF_CODE_128 |
+      Dynamsoft.DBR.EnumBarcodeFormat.BF_QR_CODE
+    );
+
+    /* 6 – receive new codes */
+    scanner.onNewCodeRead = debounce((txt) => {
+      document.getElementById('result').textContent = `Scanned: ${txt}`;
+      new Audio("data:audio/wav;base64,UklGRiQAAABXQVZF...").play(); // optional beep
+    });
+
+    /* 7 – show the camera feed inside the <div> */
+    await scanner.show(document.getElementById('scanner'));
+  </script>
+</body>
+</html>
