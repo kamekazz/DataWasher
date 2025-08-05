@@ -161,8 +161,8 @@ def track_shipments():
 
 @bp.route("/scanner")
 @login_required
-def zxing_demo():
-    return render_template("pages/zxing_demo.html", title="ZXing Demo")
+def scanner():
+    return render_template("pages/zxing_demo.html", title="ZXing")
 
 @bp.route("/greet/<name>")
 def greet(name):
