@@ -1,0 +1,13 @@
+{% include 'elements/header.html' %}
+<div class="container mx-auto px-4 flex flex-col h-[calc(100vh-4rem)]">
+  <h1 class="text-2xl font-bold mb-4">ZXing Barcode Scanner</h1>
+  <video id="zxing-video" class="w-full flex-grow"></video>
+  <div class="mt-4">
+    <label for="zxing-result" class="font-bold block mb-2">Last Scan:</label>
+    <input id="zxing-result" type="text" class="border p-1 w-full" readonly />
+  </div>
+  <div id="zxing-history" class="mt-4 h-40 overflow-y-auto border p-2"></div>
+</div>
+<script src="https://unpkg.com/@zxing/browser@latest"></script>
+<script src="{{ url_for('static', filename='js/zxing-demo.js') }}"></script>
+{% include 'elements/footer.html' %}

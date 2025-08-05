@@ -168,6 +168,10 @@ def scanner():
 def barcode_demo():
     return render_template("index.html")
 
+@bp.route("/demo/zxing")
+def zxing_demo():
+    return render_template("pages/zxing_demo.html", title="ZXing Demo")
+
 @bp.route("/greet/<name>")
 def greet(name):
     return f"<p>Hello, {name}!</p>"
