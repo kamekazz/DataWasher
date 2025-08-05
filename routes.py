@@ -163,6 +163,11 @@ def track_shipments():
 def scanner():
     return render_template("pages/barcode_scan.html", title="Scanner")
 
+
+@bp.route("/demo/barcode")
+def barcode_demo():
+    return render_template("index.html")
+
 @bp.route("/greet/<name>")
 def greet(name):
     return f"<p>Hello, {name}!</p>"
