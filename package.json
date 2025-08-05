@@ -13,5 +13,7 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {}
+  "dependencies": {
+    "@zxing/browser": "^0.1.5"
+  }
 }
