@@ -1,0 +1,20 @@
+{
+  "name": "datawasher",
+  "version": "1.0.0",
+  "description": "A simple Flask application skeleton.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node tests/zxing_scan.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@zxing/library": "^0.21.3",
+    "pngjs": "^7.0.0"
+  }
+}
