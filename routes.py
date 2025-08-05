@@ -155,20 +155,8 @@ def track_shipments():
     )
 
 
-
-
-
-
 @bp.route("/scanner")
-def scanner():
-    return render_template("pages/barcode_scan.html", title="Scanner")
-
-
-@bp.route("/demo/barcode")
-def barcode_demo():
-    return render_template("index.html")
-
-@bp.route("/demo/zxing")
+@login_required
 def zxing_demo():
     return render_template("pages/zxing_demo.html", title="ZXing Demo")
 

@@ -19,12 +19,9 @@
             <a href="{{ url_for('main.list_work_types') }}">Work Types</a>
             <a href="{{ url_for('main.list_labors') }}">Labor</a>
             <a href="{{ url_for('main.list_staged_items') }}">Staged Inventory</a>
-            <a href="{{ url_for('main.scanner') }}">Scanner</a>
             {% else %}
             <a href="{{ url_for('main.greeting') }}">Greeting</a>
-            <a href="{{ url_for('main.create_user') }}">Create User</a>
             <a href="{{ url_for('main.login') }}">Login</a>
-            <a href="{{ url_for('main.scanner') }}">Scanner</a>
             {% endif %}
         </nav>
     </header>
