@@ -3,6 +3,11 @@
 <head>
     <title>{{ title|default('DataWasher') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="512x512" href="{{ url_for('static', filename='icons/icon-512x512.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/custom.css') }}">
 </head>

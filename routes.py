@@ -8,6 +8,7 @@ from flask import (
     redirect,
     url_for,
     flash,
+    current_app
 )
 
 from flask_login import login_user, logout_user, login_required
@@ -21,6 +22,9 @@ from models import db, User, WorkType, Labor, StagedInventory
 
 bp = Blueprint("main", __name__)
 
+@bp.route('/service-worker.js')
+def service_worker():
+    return current_app.send_static_file('service-worker.js')
 
 
 @bp.route("/")
